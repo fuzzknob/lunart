@@ -13,3 +13,5 @@ export 'src/middlewares/signed_cookie.dart';
 
 export 'src/exceptions/lunart_exception.dart';
 export 'src/exceptions/not_found_exception.dart';
+
+export 'dart:io';

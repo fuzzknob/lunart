@@ -8,14 +8,7 @@ import 'package:lunart/src/types.dart';
 Middleware cors({
   List<String> origins = const [],
   List<String> allowHeaders = const [],
-  List<String> allowMethods = const [
-    'GET',
-    'HEAD',
-    'PUT',
-    'POST',
-    'DELETE',
-    'PATCH',
-  ],
+  List<Method> allowMethods = Method.values,
   List<String> exposeHeaders = const [],
   int? maxAge,
   bool credentials = false,
@@ -48,6 +41,10 @@ Middleware cors({
 
     if (maxAge != null) {
       headers['Access-Control-Max-Age'] = maxAge.toString();
+    }
+
+    if (allowMethods.isNotEmpty) {
+      headers['Access-Control-Allow-Methods'] = allowMethods.join(',');
     }
 
     if (allowHeaders.isNotEmpty) {

@@ -1,0 +1,72 @@
+import 'dart:io';
+
+import 'package:lunart/src/method.dart';
+import 'package:lunart/src/request.dart';
+import 'package:lunart/src/response.dart';
+import 'package:lunart/src/types.dart';
+
+Middleware cors({
+  List<String> origins = const [],
+  List<String> allowHeaders = const [],
+  List<String> allowMethods = const [
+    'GET',
+    'HEAD',
+    'PUT',
+    'POST',
+    'DELETE',
+    'PATCH',
+  ],
+  List<String> exposeHeaders = const [],
+  int? maxAge,
+  bool credentials = false,
+}) {
+  return (Request request, Next next) async {
+    final headers = <String, String>{};
+    final requestOrigin = request.headers['origin']?.first ?? '';
+
+    if (origins.isEmpty) {
+      headers['Access-Control-Allow-Origin'] = '*';
+    } else if (origins.contains(requestOrigin)) {
+      headers['Access-Control-Allow-Origin'] = requestOrigin;
+      headers['Vary'] = 'Origin';
+    }
+
+    if (credentials) {
+      headers['Access-Control-Allow-Credentials'] = 'true';
+    }
+
+    if (exposeHeaders.isNotEmpty) {
+      headers['Access-Control-Expose-Headers'] = exposeHeaders.join(',');
+    }
+
+    if (request.method != Method.options) {
+      final response = await next();
+      response.addHeaders(headers);
+      return response;
+    }
+    final response = res();
+
+    if (maxAge != null) {
+      headers['Access-Control-Max-Age'] = maxAge.toString();
+    }
+
+    if (allowHeaders.isNotEmpty) {
+      headers['Access-Control-Allow-Headers'] = allowHeaders.join(',');
+    } else {
+      final requestHeaders = request.headers['access-control-request-headers'];
+      if (requestHeaders != null && requestHeaders.isNotEmpty) {
+        headers['Access-Control-Allow-Headers'] = requestHeaders.join(',');
+      }
+    }
+
+    if (headers['Vary'] != null &&
+        headers['Access-Control-Allow-Headers'] != null) {
+      headers['Vary'] = '${headers['Vary']},Access-Control-Request-Headers';
+    } else {
+      headers['Vary'] = 'Access-Control-Request-Headers';
+    }
+
+    response.addHeaders(headers);
+    return response.status(HttpStatus.noContent);
+  };
+}

@@ -22,4 +22,4 @@ void main() {
 }
 ```
 
-For more example checkout [example](https://github.com/fuzzknob/lunart/tree/main/examples).
+For more examples checkout [examples](https://github.com/fuzzknob/lunart/tree/main/examples).

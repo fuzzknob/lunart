@@ -3,10 +3,8 @@ import 'package:lunart/src/exceptions/not_found_exception.dart';
 import 'libs/path_trie.dart';
 import 'utils.dart';
 import 'method.dart';
-import 'request.dart';
-import 'response.dart';
 import 'types.dart';
-import 'server.dart';
+import 'server/server.dart';
 
 class Router implements RequestHandler {
   Router({String prefix = '', List<Middleware> middlewares = const []}) {

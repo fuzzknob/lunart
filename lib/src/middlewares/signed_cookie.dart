@@ -1,5 +1,5 @@
 import 'package:lunart/src/libs/cookie_seal.dart';
-import 'package:lunart/src/request.dart';
+import 'package:lunart/src/server/server.dart';
 import 'package:lunart/src/types.dart';
 
 Middleware signedCookie({required String secret}) {

@@ -1,8 +1,7 @@
 import 'dart:io';
 
 import 'package:lunart/src/method.dart';
-import 'package:lunart/src/request.dart';
-import 'package:lunart/src/response.dart';
+import 'package:lunart/src/server/server.dart';
 import 'package:lunart/src/types.dart';
 
 Middleware cors({

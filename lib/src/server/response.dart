@@ -1,17 +1,17 @@
-import 'dart:io';
-import 'dart:convert' as convert;
-
-import 'cookie.dart';
+part of 'server.dart';
 
 class Response {
   int _statusCode = HttpStatus.ok;
   dynamic _body;
   Map<String, Object> _headers = {};
+  Function(HttpResponse, Response)? _hijacker;
   List<LunartCookie> cookies = [];
 
   int get statusCode => _statusCode;
   Map<String, Object> get headers => _headers;
   dynamic get body => _body;
+
+  get hasHijacked => _hijacker != null;
 
   Response status(int statusCode) {
     _statusCode = statusCode;
@@ -99,6 +99,23 @@ class Response {
 
   Response removeCookie(String name) {
     cookies.add(LunartCookie(name: name, value: '', maxAge: 0));
+    return this;
+  }
+
+  /// Hijacks the response.
+  /// The hijacker is responsible to write and close the http response
+  Response hijack(Function(HttpResponse) hijacker) {
+    _hijacker = (httpResponse, _) {
+      return hijacker(httpResponse);
+    };
+    return this;
+  }
+
+  /// Hijacks the response.
+  /// This also passes Lunart response object
+  /// The hijacker is responsible to write and close the http response
+  Response hijackWithResponse(Function(HttpResponse, Response) hijacker) {
+    _hijacker = hijacker;
     return this;
   }
 }

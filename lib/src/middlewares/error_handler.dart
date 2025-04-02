@@ -1,6 +1,5 @@
 import 'package:lunart/src/exceptions/lunart_exception.dart';
-import 'package:lunart/src/request.dart';
-import 'package:lunart/src/response.dart';
+import 'package:lunart/src/server/server.dart';
 import 'package:lunart/src/types.dart';
 
 Future<Response> errorHandler(Request request, Next next) async {

@@ -1,12 +1,17 @@
 import 'dart:io';
+import 'dart:convert' as convert;
 
-import 'plugins/base_plugin.dart';
+import 'package:collection/collection.dart';
+import 'package:lunart/src/exceptions/lunart_exception.dart';
 
-import 'method.dart';
-import 'request.dart';
-import 'response.dart';
-import 'types.dart';
-import 'utils.dart';
+import '../plugins/base_plugin.dart';
+import '../cookie.dart';
+import '../method.dart';
+import '../types.dart';
+import '../utils.dart';
+
+part 'request.dart';
+part 'response.dart';
 
 typedef Plugin = Function(Server server);
 
@@ -41,8 +46,8 @@ class Server {
   }) async {
     _router = router;
     final httpServer = await HttpServer.bind(host, port);
-    print('Started server at $host:$port');
     httpServer.listen(_handleRequest);
+    print('Started server at $host:$port');
     return this;
   }
 
@@ -76,6 +81,9 @@ class Server {
       httpCookie.sameSite = cookie.sameSite;
       httpCookie.secure = cookie.secure;
       httpResponse.cookies.add(httpCookie);
+    }
+    if (response.hasHijacked) {
+      return response._hijacker?.call(httpResponse, response);
     }
     httpResponse.write(response.body);
     return httpResponse.close();

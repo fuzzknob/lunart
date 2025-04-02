@@ -1,6 +1,4 @@
-export 'src/server.dart';
-export 'src/request.dart';
-export 'src/response.dart';
+export 'src/server/server.dart';
 export 'src/method.dart';
 export 'src/types.dart';
 export 'src/router.dart';

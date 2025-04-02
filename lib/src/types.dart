@@ -1,7 +1,6 @@
 import 'dart:async';
 
-import 'request.dart';
-import 'response.dart';
+import 'server/server.dart';
 
 typedef Next = FutureOr<Response> Function();
 typedef Handler = FutureOr<Response> Function(Request request);

@@ -1,10 +1,4 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:collection/collection.dart';
-import 'package:lunart/src/exceptions/lunart_exception.dart';
-
-import 'method.dart';
+part of 'server.dart';
 
 class Request {
   Request({
@@ -60,8 +54,8 @@ class Request {
     final contentType = nativeRequest.headers.contentType;
     if (contentType == null) return null;
     if (contentType.mimeType == 'application/json') {
-      final content = await utf8.decodeStream(nativeRequest);
-      return json.decode(content);
+      final content = await convert.utf8.decodeStream(nativeRequest);
+      return convert.json.decode(content);
     }
   }
 }

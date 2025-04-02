@@ -17,7 +17,7 @@ Router userRoutes() {
 }
 
 Router postsRoutes() {
-  // You can also posts route wide middlewares
+  // You can also add posts route wide middlewares
   final routes = Router.nest('/posts', middlewares: [postMiddleware]);
 
   routes.post('/', (_) => res());

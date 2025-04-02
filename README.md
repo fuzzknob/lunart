@@ -9,16 +9,17 @@ An ergonomic server side library.
 import 'package:lunart/lunart.dart';
 
 void main() {
-  final route = Route();
+  final router = Router();
 
-  route.get('/', (_) => res().message('Hello World'))
+  router.get('/', (_) => res().message('Hello World'));
 
-  route.post('/posts', (req) async {
+  router.post('/posts', (req) async {
     final data = await req.body();
     return res().json(data);
   });
 
-  Server().serve(route, port: 8000);
+  // Starts server at port 8000 by default
+  Server().serve(router);
 }
 ```
 

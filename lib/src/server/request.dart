@@ -51,11 +51,15 @@ class Request {
   }
 
   Future body() async {
-    final contentType = nativeRequest.headers.contentType;
-    if (contentType == null) return null;
-    if (contentType.mimeType == 'application/json') {
-      final content = await convert.utf8.decodeStream(nativeRequest);
-      return convert.json.decode(content);
+    try {
+      final contentType = nativeRequest.headers.contentType;
+      if (contentType == null) return null;
+      if (contentType.mimeType == 'application/json') {
+        final content = await convert.utf8.decodeStream(nativeRequest);
+        return convert.json.decode(content);
+      }
+    } catch (_) {
+      return null;
     }
   }
 }

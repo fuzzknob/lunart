@@ -109,7 +109,24 @@ class Response {
     return this;
   }
 
-  Response streamEvent(void Function(sse.SSEStream) cb) => sse.streamEvent(cb, this);
+  Response streamEvent(void Function(sse.SSEStream) cb) =>
+      sse.streamEvent(cb, this);
+
+  Response notFound() => status(HttpStatus.notFound);
+
+  Response ok() => status(HttpStatus.ok);
+
+  Response created() => status(HttpStatus.ok);
+
+  Response internalServerError() => status(HttpStatus.internalServerError);
+
+  Response forbidden() => status(HttpStatus.forbidden);
+
+  Response unauthorized() => status(HttpStatus.unauthorized);
+
+  Response badRequest() => status(HttpStatus.badRequest);
+
+  Response noContent() => status(HttpStatus.noContent);
 }
 
 Response res() => Response();

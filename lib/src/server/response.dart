@@ -30,11 +30,17 @@ class Response {
 
   Response json(dynamic body) {
     _body = convert.json.encode(body);
-    _headers = {..._headers, 'content-type': 'application/json'};
+    header('content-type', 'application/json');
     return this;
   }
 
   Response message(String message) => json({'message': message});
+
+  Response html(String html) {
+    _body = html;
+    header('content-type', 'text/html');
+    return this;
+  }
 
   Response redirect(String url, [int statusCode = HttpStatus.found]) {
     _statusCode = statusCode;

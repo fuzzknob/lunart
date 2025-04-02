@@ -2,7 +2,9 @@ import 'dart:io';
 import 'dart:convert' as convert;
 
 import 'package:collection/collection.dart';
+
 import 'package:lunart/src/exceptions/lunart_exception.dart';
+import 'package:lunart/src/helpers/sse.dart' as sse;
 
 import '../plugins/base_plugin.dart';
 import '../cookie.dart';

@@ -104,20 +104,12 @@ class Response {
 
   /// Hijacks the response.
   /// The hijacker is responsible to write and close the http response
-  Response hijack(Function(HttpResponse) hijacker) {
-    _hijacker = (httpResponse, _) {
-      return hijacker(httpResponse);
-    };
-    return this;
-  }
-
-  /// Hijacks the response.
-  /// This also passes Lunart response object
-  /// The hijacker is responsible to write and close the http response
-  Response hijackWithResponse(Function(HttpResponse, Response) hijacker) {
+  Response hijack(Function(HttpResponse, Response) hijacker) {
     _hijacker = hijacker;
     return this;
   }
+
+  Response streamEvent(void Function(sse.SSEStream) cb) => sse.streamEvent(cb, this);
 }
 
 Response res() => Response();

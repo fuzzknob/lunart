@@ -2,7 +2,7 @@ part of 'server.dart';
 
 class Response {
   int _statusCode = HttpStatus.ok;
-  dynamic _body;
+  dynamic _body = '';
   Map<String, Object> _headers = {};
   Function(HttpResponse, Response)? _hijacker;
   List<LunartCookie> cookies = [];
@@ -28,14 +28,22 @@ class Response {
     return this;
   }
 
+  /// Sets the content-type header to application/json
   Response json(dynamic body) {
     _body = convert.json.encode(body);
     header('content-type', 'application/json');
     return this;
   }
 
+  /// Sends a json response with a message property
+  /// ```json
+  /// {
+  ///   "message": "the message"
+  /// }
+  /// ```
   Response message(String message) => json({'message': message});
 
+  /// Sets the content-type header to text/html
   Response html(String html) {
     _body = html;
     header('content-type', 'text/html');

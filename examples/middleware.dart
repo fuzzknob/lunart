@@ -4,17 +4,26 @@ import 'package:lunart/lunart.dart';
 
 FutureOr<Response> globalMiddleware(Request req, Next next) {
   print('-> global middleware');
-  return next();
+  final response = next();
+  print('-> global middleware');
+
+  return response;
 }
 
 FutureOr<Response> routeMiddleware1(Request req, Next next) {
   print('--> route middleware 1');
-  return next();
+  final response = next();
+  print('--> route middleware 1');
+
+  return response;
 }
 
 FutureOr<Response> routeMiddleware2(Request req, Next next) {
   print('---> route middleware 2');
-  return next();
+  final response = next();
+  print('---> route middleware 2');
+
+  return response;
 }
 
 // The console output of the this setup will look something like this:

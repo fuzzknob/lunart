@@ -45,11 +45,14 @@ class Server {
     RequestHandler router, {
     port = 8000,
     host = '0.0.0.0',
+    silent = false,
   }) async {
     _router = router;
     final httpServer = await HttpServer.bind(host, port);
     httpServer.listen(_handleRequest);
-    print('Started server at $host:$port');
+    if (!silent) {
+      print('Started server at $host:$port');
+    }
     return this;
   }
 

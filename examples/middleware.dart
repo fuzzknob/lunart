@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:lunart/lunart.dart';
 
 FutureOr<Response> globalMiddleware(Request req, Next next) {

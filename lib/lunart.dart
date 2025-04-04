@@ -14,4 +14,5 @@ export 'src/exceptions/not_found_exception.dart';
 
 export 'src/helpers/sse.dart';
 
-export 'dart:io';
+export 'dart:io' show SameSite, HttpStatus;
+export 'dart:async' show FutureOr;

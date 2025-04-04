@@ -2,14 +2,14 @@ part of 'server.dart';
 
 class Response {
   int _statusCode = HttpStatus.ok;
-  dynamic _body = '';
+  Object _body = '';
   Map<String, Object> _headers = {};
   Function(HttpResponse, Response)? _hijacker;
   List<LunartCookie> cookies = [];
 
   int get statusCode => _statusCode;
   Map<String, Object> get headers => _headers;
-  dynamic get body => _body;
+  Object get body => _body;
 
   get hasHijacked => _hijacker != null;
 

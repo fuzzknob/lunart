@@ -32,7 +32,11 @@ void main() {
     }
 
     final id = postStore.keys.last + 1;
-    final post = Post(id: id, title: data['title'], body: data['body']);
+    final post = Post(
+      id: id,
+      title: data['title'] as String,
+      body: data['body'] as String,
+    );
     postStore[id] = post;
 
     return res().created().message('Post successfully created');
@@ -56,7 +60,10 @@ void main() {
       return res().notFound().message('Post not found');
     }
 
-    postStore[id] = post.copyWith(title: data['title'], body: data['body']);
+    postStore[id] = post.copyWith(
+      title: data['title'] as String,
+      body: data['body'] as String,
+    );
 
     return res().message('Post updated successfully');
   });

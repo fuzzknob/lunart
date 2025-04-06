@@ -50,6 +50,12 @@ class Response {
     return this;
   }
 
+  Response text(String text) {
+    _body = text;
+    header('content-type', 'text/plain');
+    return this;
+  }
+
   Response redirect(String url, [int statusCode = HttpStatus.found]) {
     _statusCode = statusCode;
     header('Location', url);

@@ -86,7 +86,7 @@ class Router implements RequestHandler {
     final path = request.path;
     final method = request.method;
     var handler = _routesMap[_createRouteMapKey(path, method)];
-    if (handler != null) {
+    if (handler != null && !path.contains(':')) {
       return handler.invoke(request);
     }
     final result = _pathTrie.lookupPath(path);

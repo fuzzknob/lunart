@@ -9,8 +9,9 @@ Future<Response> errorHandler(Request request, Next next) async {
     return res()
         .status(e.statusCode)
         .message(e.message ?? 'There was an error');
-  } catch (e) {
+  } catch (e, stacktrace) {
     print(e);
+    print(stacktrace);
     return res()
         .status(500)
         .message('There was an error, Please check the logs');

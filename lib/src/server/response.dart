@@ -70,7 +70,7 @@ class Response {
     String? domain,
     String? path,
     DateTime? expires,
-    int? maxAge,
+    Duration? maxAge,
     SameSite? sameSite,
   }) {
     cookies.add(
@@ -97,7 +97,7 @@ class Response {
     String? domain,
     String? path,
     DateTime? expires,
-    int? maxAge,
+    Duration? maxAge,
     SameSite? sameSite,
   }) {
     cookies.add(
@@ -118,7 +118,9 @@ class Response {
   }
 
   Response removeCookie(String name) {
-    cookies.add(LunartCookie(name: name, value: '', maxAge: 0));
+    cookies.add(
+      LunartCookie(name: name, value: '', maxAge: Duration(seconds: 0)),
+    );
     return this;
   }
 

@@ -82,7 +82,7 @@ class Server {
       httpCookie.domain = cookie.domain;
       httpCookie.expires = cookie.expires;
       httpCookie.httpOnly = cookie.httpOnly;
-      httpCookie.maxAge = cookie.maxAge;
+      httpCookie.maxAge = cookie.maxAge?.inSeconds;
       httpCookie.path = cookie.path;
       httpCookie.sameSite = cookie.sameSite;
       httpCookie.secure = cookie.secure;

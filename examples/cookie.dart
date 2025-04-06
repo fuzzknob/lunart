@@ -26,7 +26,7 @@ void main() {
       domain: 'http://example.com',
       expires: DateTime.now().add(Duration(days: 30)),
       httpOnly: true,
-      maxAge: 60 * 60 * 24 * 30,
+      maxAge: Duration(days: 30),
       path: '/',
       sameSite: SameSite.strict,
       secure: true,

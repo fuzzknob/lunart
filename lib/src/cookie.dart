@@ -1,6 +1,6 @@
 import 'dart:io';
 
-class LunartCookie implements Cookie {
+class LunartCookie {
   LunartCookie({
     required String name,
     required String value,
@@ -17,31 +17,22 @@ class LunartCookie implements Cookie {
     this.value = Uri.encodeQueryComponent(value);
   }
 
-  @override
   late final String name;
 
-  @override
   late String value;
 
-  @override
   String? domain;
 
-  @override
   DateTime? expires;
 
-  @override
   bool httpOnly;
 
-  @override
-  int? maxAge;
+  Duration? maxAge;
 
-  @override
   String? path;
 
-  @override
   SameSite? sameSite;
 
-  @override
   bool secure;
 
   bool signed;

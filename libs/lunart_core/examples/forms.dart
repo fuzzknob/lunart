@@ -7,23 +7,32 @@ const formsHTMLTemplate = '''
 <html>
   <head>
     <title>Lunart forms</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
   </head>
   <body>
-    <h1>Url encoded form</h1>
-    <form action="/post-urlencoded" method="post">
-      <label for="name">Name</label>
-      <input type="text" id="name" name="name"><br><br>
-      <label for="email">Email</label>
-      <input type="email" id="email" name="email"><br><br>
-      <button>Submit</button>
-    </form>
+    <main class="container mx-auto" style="width: 500px; margin-top: 100px;">
+      <form class="mb-5" action="/post-urlencoded" method="post">
+        <h3>Url encoded form</h3>
+        <div class="mb-3">
+          <label for="name" class="form-label">Name</label>
+          <input class="form-control" type="text" id="name" name="name">
+        </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input class="form-control" type="email" id="email" name="email">
+        </div>
+        <button class="btn btn-primary">Submit</button>
+      </form>
 
-    <h1>Multipart form</h1>
-    <form action="/post-multi-part" method="post" enctype="multipart/form-data">
-      <label for="file-upload">Image</label>
-      <input type="file" accept="image/*" id="file-upload" name="file-upload"><br><br>
-      <button>Submit</button>
-    </form>
+      <form action="/post-multi-part" method="post" enctype="multipart/form-data">
+        <h3>Multipart form</h3>
+        <div class="mb-3">
+          <label for="file-upload">Image</label>
+          <input class="form-control" type="file" accept="image/*" id="file-upload" name="file-upload">
+        </div>
+        <button class="btn btn-primary">Submit</button>
+      </form>
+    </main>
   </body>
 </html>
 ''';

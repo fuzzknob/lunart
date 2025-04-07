@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:lunart_core/lunart_core.dart';
+import 'package:lucore/lucore.dart';
 
 void main() {
   final router = Router();

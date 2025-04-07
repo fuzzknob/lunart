@@ -1,4 +1,4 @@
-import 'package:lunart_core/lunart_core.dart';
+import 'package:lucore/lucore.dart';
 
 Router userRoutes() {
   final routes = Router.nest('/users');

@@ -1,5 +1,5 @@
-name: lunart_core
-description: The core of the ecosystem
+name: lucore
+description: Lunart Core, The core of the ecosystem
 version: 0.0.1
 
 environment:

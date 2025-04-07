@@ -1,6 +1,6 @@
-import 'package:lunart/src/libs/cookie_seal.dart';
-import 'package:lunart/src/server/server.dart';
-import 'package:lunart/src/types.dart';
+import '../libs/cookie_seal.dart';
+import '../server/server.dart';
+import '../types.dart';
 
 Middleware signedCookie({required String secret}) {
   final sealer = CookieSealer(secret);

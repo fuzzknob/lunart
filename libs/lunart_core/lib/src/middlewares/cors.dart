@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:lunart/src/method.dart';
-import 'package:lunart/src/server/server.dart';
-import 'package:lunart/src/types.dart';
+import '../method.dart';
+import '../server/server.dart';
+import '../types.dart';
 
 Middleware cors({
   List<String> origins = const [],

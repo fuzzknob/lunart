@@ -1,6 +1,6 @@
 # Lunart
 
-An ergonomic server side library.
+An ergonomic server side ecosystem.
 
 > ⚠️ Lunart is still in active development. Some features are still missing and some features might not be there yet.
 
@@ -23,4 +23,4 @@ void main() {
 }
 ```
 
-For more examples checkout [examples](https://github.com/fuzzknob/lunart/tree/main/examples).
+For more examples checkout [examples](https://github.com/fuzzknob/lunart/tree/main/libs/lunart_core/examples).

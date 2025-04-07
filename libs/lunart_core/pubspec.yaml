@@ -1,0 +1,17 @@
+name: lunart_core
+description: The core of the ecosystem
+version: 0.0.1
+
+environment:
+  sdk: ^3.7.2
+
+resolution: workspace
+
+dependencies:
+  crypto: ^3.0.6
+  collection: ^1.19.1
+  mime: ^2.0.0
+
+dev_dependencies:
+  lints: ^5.0.0
+  test: ^1.24.0

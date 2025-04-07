@@ -1,5 +1,5 @@
-import 'package:lunart/src/server/server.dart';
-import 'package:lunart/src/types.dart';
+import '../server/server.dart';
+import '../types.dart';
 
 Future<Response> secureHeaders(Request request, Next next) async {
   final response = await next();

@@ -1,5 +1,4 @@
-import 'package:lunart/src/exceptions/not_found_exception.dart';
-
+import 'exceptions/not_found_exception.dart';
 import 'libs/path_trie.dart';
 import 'utils.dart';
 import 'method.dart';

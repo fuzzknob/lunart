@@ -1,4 +1,4 @@
-import 'package:lunart/lunart.dart';
+import 'package:lunart_core/lunart.dart';
 
 FutureOr<Response> globalMiddleware(Request req, Next next) {
   print('-> global middleware');

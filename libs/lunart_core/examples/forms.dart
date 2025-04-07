@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:lunart/lunart.dart';
+import 'package:lunart_core/lunart.dart';
 
 const formsHTMLTemplate = '''
 <!DOCTYPE html>

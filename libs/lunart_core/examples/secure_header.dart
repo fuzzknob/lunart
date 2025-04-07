@@ -1,4 +1,4 @@
-import 'package:lunart/lunart.dart';
+import 'package:lunart_core/lunart.dart';
 
 void main() {
   final router = Router();
@@ -17,7 +17,6 @@ void main() {
     return res();
   });
 
-  // Add request logger as a global middleware
-  // This will log every request
-  Server().use(logger).serve(router);
+  // Adds basic security headers
+  Server().use(secureHeaders).serve(router);
 }

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
-import 'package:lunart/src/server/server.dart';
+
+import '../server/server.dart';
 
 class SSEStream {
   SSEStream(this.socket) {

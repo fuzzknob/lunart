@@ -84,7 +84,7 @@ void main() {
     return res().message('Post deleted successfully');
   });
 
-  Server().serve(router);
+  Server().use(logger).serve(router);
 }
 
 class Post {

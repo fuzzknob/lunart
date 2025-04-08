@@ -1,10 +1,10 @@
-# Lunart core
+# Lunart core (lucore)
 
 The core of the ecosystem.
 
 ### Basic usage
 ```dart
-import 'package:lunart/lunart.dart';
+import 'package:lucore/lucore.dart';
 
 void main() {
   final router = Router();

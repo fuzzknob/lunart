@@ -50,7 +50,11 @@ class Request {
     return Uri.decodeQueryComponent(value);
   }
 
-  Future<Map<String, Object>?> body() async {
+  /// # Parses body according to the content-type
+  /// ```dart
+  /// final data = await req.body();
+  /// ```
+  Future<Map<String, dynamic>?> body() async {
     try {
       final contentType = nativeRequest.headers.contentType;
       if (contentType == null) return null;
@@ -65,8 +69,12 @@ class Request {
       if (contentType.mimeType == 'multipart/form-data') {
         return _parseMultiPartForm(nativeRequest);
       }
-    } catch (_) {
-      return null;
+    } catch (e, stacktrace) {
+      throw BadRequestException(
+        'The request cannot be processed',
+        e,
+        stacktrace,
+      );
     }
     return null;
   }

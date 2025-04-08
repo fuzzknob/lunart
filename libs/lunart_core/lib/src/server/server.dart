@@ -5,6 +5,7 @@ import 'package:collection/collection.dart';
 import 'package:mime/mime.dart';
 
 import '../exceptions/lunart_exception.dart';
+import '../exceptions/bad_request_exception.dart';
 import '../helpers/sse.dart' as sse;
 import '../plugins/base_plugin.dart';
 import '../cookie.dart';

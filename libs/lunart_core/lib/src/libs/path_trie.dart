@@ -43,7 +43,7 @@ class PathTrie {
       if (child == null) return null;
       if (pathSection.startsWith(':')) {
         final parameterName = pathSection.substring(1);
-        parameters[parameterName] = requestSection;
+        parameters[parameterName] = Uri.decodeComponent(requestSection);
       }
       fullPath += '/$pathSection';
       currentNode = child;

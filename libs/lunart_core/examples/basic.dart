@@ -3,12 +3,12 @@ import 'package:lucore/lucore.dart';
 void main() {
   final router = Router();
 
-  router.get('/', (_) => res().message('Hello World'));
+  router.get('/', (_) => res.message('Hello World'));
 
   router.post('/posts', (req) async {
     // get request body
     final data = await req.body();
-    return res().json(data);
+    return res.json(data);
   });
 
   router.get('/posts/:id', (req) {
@@ -16,7 +16,7 @@ void main() {
     final id = req.parameters['id'];
 
     print(id);
-    return res();
+    return res.ok();
   });
 
   router.get('/posts/search', (req) {
@@ -24,7 +24,7 @@ void main() {
     final query = req.queries['q'];
     print(query);
 
-    return res();
+    return res.ok();
   });
 
   // Port can be set with port option

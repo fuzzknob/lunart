@@ -63,7 +63,7 @@ class SSEStream {
 }
 
 Response streamEvent(Function(SSEStream) callback, [Response? response]) {
-  response ??= res();
+  response ??= Response();
   return response.hijack((httpResponse, response) async {
     final socket = await httpResponse.detachSocket(writeHeaders: false);
     final sse = SSEStream(socket);

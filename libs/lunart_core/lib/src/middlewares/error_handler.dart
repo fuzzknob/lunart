@@ -10,14 +10,10 @@ Future<Response> errorHandler(Request request, Next next) async {
       print(e);
       print(stacktrace);
     }
-    return res()
-        .status(e.statusCode)
-        .message(e.message ?? 'There was an error');
+    return res.status(e.statusCode).message(e.message ?? 'There was an error');
   } catch (e, stacktrace) {
     print(e);
     print(stacktrace);
-    return res()
-        .status(500)
-        .message('There was an error, Please check the logs');
+    return res.status(500).message('There was an error, Please check the logs');
   }
 }

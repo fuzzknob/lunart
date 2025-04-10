@@ -38,7 +38,7 @@ void main() {
   router.get('/', (_) {
     print('----> route handler');
 
-    return res();
+    return res;
 
     // Add route middleware directly in the route
   }, middlewares: [routeMiddleware1, routeMiddleware2]);

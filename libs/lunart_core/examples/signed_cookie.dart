@@ -4,7 +4,7 @@ void main() {
   final router = Router();
 
   router.post('/set-cookie', (_) {
-    return res().signedCookie('remember-me', 'true');
+    return res.signedCookie('remember-me', 'true');
   });
 
   router.get('/get-cookie', (req) async {
@@ -12,7 +12,7 @@ void main() {
 
     print(rememberMe);
 
-    return res();
+    return res.ok();
   });
 
   router.get('/get-cookie-with-max-age', (req) async {
@@ -24,12 +24,12 @@ void main() {
 
     print(rememberMe);
 
-    return res();
+    return res.ok();
   });
 
   router.delete('/delete-cookie', (_) {
     // you can remove a signed cookie just like a regular cookie
-    return res().removeCookie('remember-cookie');
+    return res.removeCookie('remember-cookie');
   });
 
   // use signed cookie middleware

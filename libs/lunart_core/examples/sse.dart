@@ -6,7 +6,7 @@ void main() {
   final router = Router();
 
   router.get('/sse', (_) {
-    return res().streamEvent((stream) {
+    return res.streamEvent((stream) {
       print('sending text message');
       stream.sendText('hello from the other side');
 

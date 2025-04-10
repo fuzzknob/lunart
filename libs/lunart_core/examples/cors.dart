@@ -3,11 +3,11 @@ import 'package:lucore/lucore.dart';
 void main() {
   final router = Router();
 
-  router.get('/', (_) => res().message('Hello World'));
+  router.get('/', (_) => res.message('Hello World'));
 
   router.post('/posts', (req) async {
     final data = await req.body();
-    return res().json(data);
+    return res.json(data);
   });
 
   // Just use the cors middleware on the server.
@@ -18,11 +18,11 @@ void main() {
 void moreCors() {
   final router = Router();
 
-  router.get('/', (_) => res().message('Hello World'));
+  router.get('/', (_) => res.message('Hello World'));
 
   router.post('/posts', (req) async {
     final data = await req.body();
-    return res().json(data);
+    return res.json(data);
   });
 
   // Configure cors according to your liking

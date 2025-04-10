@@ -36,7 +36,7 @@ Middleware cors({
       response.addHeaders(headers);
       return response;
     }
-    final response = res();
+    final response = Response();
 
     if (maxAge != null) {
       headers['Access-Control-Max-Age'] = maxAge.toString();

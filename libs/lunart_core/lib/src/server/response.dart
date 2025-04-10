@@ -151,4 +151,4 @@ class Response {
   Response noContent() => status(HttpStatus.noContent);
 }
 
-Response res() => Response();
+Response get res => Response();

@@ -8,27 +8,27 @@ void main() {
 
   router.get('/posts', (_) {
     final posts = postStore.values.map((post) => post.toJson()).toList();
-    return res().json(posts);
+    return res.json(posts);
   });
 
   router.get('/posts/:id', (req) {
     final id = int.tryParse(req.parameters['id']);
     if (id == null) {
-      return res().badRequest().message('Invalid id');
+      return res.badRequest().message('Invalid id');
     }
 
     final post = postStore[id];
     if (post == null) {
-      return res().notFound().message('Post not found');
+      return res.notFound().message('Post not found');
     }
 
-    return res().json(post);
+    return res.json(post);
   });
 
   router.post('/posts', (req) async {
     final data = await req.body();
     if (data == null || data['title'] == null) {
-      return res().badRequest().message('The request is not valid');
+      return res.badRequest().message('The request is not valid');
     }
 
     final id = postStore.keys.last + 1;
@@ -39,7 +39,7 @@ void main() {
     );
     postStore[id] = post;
 
-    return res().created().message('Post successfully created');
+    return res.created().message('Post successfully created');
   });
 
   router.patch('/posts/:id', (req) async {
@@ -47,17 +47,17 @@ void main() {
     final data = await req.body();
 
     if (id == null) {
-      return res().badRequest().message('Invalid id');
+      return res.badRequest().message('Invalid id');
     }
 
     if (data == null) {
-      return res().badRequest().message('The request is not valid');
+      return res.badRequest().message('The request is not valid');
     }
 
     final post = postStore[id];
 
     if (post == null) {
-      return res().notFound().message('Post not found');
+      return res.notFound().message('Post not found');
     }
 
     postStore[id] = post.copyWith(
@@ -65,23 +65,23 @@ void main() {
       body: data['body'] as String,
     );
 
-    return res().message('Post updated successfully');
+    return res.message('Post updated successfully');
   });
 
   router.delete('/posts/:id', (req) async {
     final id = int.tryParse(req.parameters['id']);
 
     if (id == null) {
-      return res().badRequest().message('Invalid id');
+      return res.badRequest().message('Invalid id');
     }
 
     if (postStore[id] == null) {
-      res().notFound().message('Post not found');
+      res.notFound().message('Post not found');
     }
 
     postStore.remove(id);
 
-    return res().message('Post deleted successfully');
+    return res.message('Post deleted successfully');
   });
 
   Server().use(logger).serve(router);

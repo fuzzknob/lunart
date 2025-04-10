@@ -4,7 +4,7 @@ void main() {
   final router = Router();
 
   router.post('/set-cookie', (_) {
-    return res().cookie('remember-me', 'true');
+    return res.cookie('remember-me', 'true');
   });
 
   router.get('/get-cookie', (req) {
@@ -12,15 +12,15 @@ void main() {
 
     print(rememberMe);
 
-    return res().ok();
+    return res.ok();
   });
 
   router.delete('/delete-cookie', (_) {
-    return res().removeCookie('remember-cookie');
+    return res.removeCookie('remember-cookie');
   });
 
   router.post('/set-cookie-with-option', (_) {
-    return res().cookie(
+    return res.cookie(
       'remember-options',
       'true',
       domain: 'http://example.com',

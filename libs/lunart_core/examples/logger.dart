@@ -3,18 +3,18 @@ import 'package:lucore/lucore.dart';
 void main() {
   final router = Router();
 
-  router.get('/', (_) => res().message('Hello World'));
+  router.get('/', (_) => res.message('Hello World'));
 
   router.post('/posts', (req) async {
     final data = await req.body();
-    return res().json(data);
+    return res.json(data);
   });
 
   router.get('/posts/:id', (req) {
     final id = req.parameters['id'];
 
     print(id);
-    return res();
+    return res.ok();
   });
 
   // Add request logger as a global middleware

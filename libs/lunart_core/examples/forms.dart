@@ -41,30 +41,30 @@ void main() {
   final router = Router();
 
   router.get('/', (_) {
-    return res().html(formsHTMLTemplate.trim());
+    return res.html(formsHTMLTemplate.trim());
   });
 
   // parses application/x-www-form-urlencoded
   router.post('/post-urlencoded', (req) async {
     final body = await req.body();
-    return res().json(body);
+    return res.json(body);
   });
 
   // parses multipart/form-data
   router.post('/post-multi-part', (req) async {
     final body = await req.body();
     if (body == null) {
-      return res().badRequest().text('Bad request');
+      return res.badRequest().text('Bad request');
     }
     final upload = body['file-upload'] as MultipartFileUpload?;
     if (upload == null) {
-      return res().badRequest().text('No image to upload');
+      return res.badRequest().text('No image to upload');
     }
     if (!upload.mime!.startsWith('image')) {
-      return res().badRequest().text('Only images are supported');
+      return res.badRequest().text('Only images are supported');
     }
     final data = base64Encode(upload.bytes);
-    return res().html('''
+    return res.html('''
       <img src="data:${upload.mime};base64,$data" />
     ''');
   });

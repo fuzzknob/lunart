@@ -7,7 +7,7 @@ class Runner {
 
   final Driver driver;
 
-  Future<QueryResult> runSelectQuery(QueryBuilder query) async {
+  Future<QueryResult?> runSelectQuery(QueryBuilder query) async {
     final result = await driver.executeSelectQuery(
       query.sql,
       buildParameters(query.queryBindings, ['select', 'where']),
@@ -22,10 +22,11 @@ class Runner {
     );
   }
 
-  Future<Object> runInsertGetIdQuery(QueryBuilder query) {
+  Future<Object?> runInsertGetIdQuery(QueryBuilder query) {
     return driver.executeInsertGetIdQuery(
       query.sql,
       buildParameters(query.queryBindings, ['values']),
+      query.identityColumn,
     );
   }
 

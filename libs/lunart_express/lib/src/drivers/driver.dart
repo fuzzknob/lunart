@@ -1,7 +1,7 @@
 import '../types.dart';
 
 abstract interface class Driver {
-  Future<QueryResult> executeSelectQuery(
+  Future<QueryResult?> executeSelectQuery(
     String query, [
     List<Object?> parameters = const [],
   ]);
@@ -11,9 +11,10 @@ abstract interface class Driver {
     List<Object?> parameters = const [],
   ]);
 
-  Future<Object> executeInsertGetIdQuery(
+  Future<Object?> executeInsertGetIdQuery(
     String query, [
     List<Object?> parameters = const [],
+    String identityColumn = 'id',
   ]);
 
   Future<void> executeUpdateQuery(
@@ -25,4 +26,6 @@ abstract interface class Driver {
     String query, [
     List<Object?> parameters = const [],
   ]);
+
+  Future<void> executeRawQuery(String query);
 }

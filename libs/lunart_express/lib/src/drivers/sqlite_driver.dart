@@ -13,11 +13,11 @@ class SqliteDriver implements Driver {
   final SqliteConnection connection;
 
   @override
-  Future<QueryResult> executeSelectQuery(
+  Future<QueryResult?> executeSelectQuery(
     String query, [
     List<Object?> parameters = const [],
   ]) {
-    return run((db) {
+    return _run((db) {
       final results = db.select(query, parameters);
       return results.toList();
     });
@@ -32,11 +32,12 @@ class SqliteDriver implements Driver {
   }
 
   @override
-  Future<int> executeInsertGetIdQuery(
+  Future<int?> executeInsertGetIdQuery(
     String query, [
     List<Object?> parameters = const [],
+    String identityColumn = 'id',
   ]) {
-    return run((db) {
+    return _run((db) {
       db.execute(query, parameters);
       return db.lastInsertRowId;
     });
@@ -60,24 +61,33 @@ class SqliteDriver implements Driver {
     return _execute(query, parameters);
   }
 
-  Future<T> run<T>(T Function(sl.Database) cb) async {
-    return Isolate.run(() async {
-      final db =
-          connection.mode == SqliteConnectionMode.file
-              ? sl.sqlite3.open(connection.file!)
-              : sl.sqlite3.openInMemory();
-      final result = cb(db);
-      db.dispose();
-      return result;
-    });
+  @override
+  Future<void> executeRawQuery(String query) {
+    return _execute(query);
   }
 
   Future<void> _execute(
     String query, [
     List<Object?> parameters = const [],
   ]) async {
-    return run((db) {
+    return _run((db) {
       db.execute(query, parameters);
+    });
+  }
+
+  Future<T?> _run<T>(T? Function(sl.Database) cb) async {
+    return Isolate.run(() async {
+      T? result;
+      final db =
+          connection.mode == SqliteConnectionMode.file
+              ? sl.sqlite3.open(connection.file!)
+              : sl.sqlite3.openInMemory();
+      try {
+        result = cb(db);
+      } finally {
+        db.dispose();
+      }
+      return result;
     });
   }
 }

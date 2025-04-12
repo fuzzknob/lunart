@@ -197,7 +197,7 @@ class QueryBuilder {
     return runner.runInsertQuery(this);
   }
 
-  Future<Object> insertGetId(Map<String, Object?> value) {
+  Future<Object?> insertGetId(Map<String, Object?> value) {
     queryBindings.values = [value];
     sql = grammar.buildInsertGetIdQuery(this, value);
     return runner.runInsertGetIdQuery(this);

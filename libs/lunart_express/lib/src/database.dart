@@ -1,12 +1,14 @@
-import 'package:luex/src/query/grammar/sqlite_grammar.dart';
-
-import 'drivers/driver.dart';
-import 'connection/sqlite_connection.dart';
-import 'drivers/sqlite_driver.dart';
-import 'query/grammar/grammar.dart' show Grammar;
 import 'query/query_builder.dart';
+import 'query/grammar/grammar.dart';
+import 'query/grammar/sqlite_grammar.dart';
+import 'query/grammar/postgres_grammar.dart';
+import 'drivers/driver.dart';
+import 'drivers/sqlite_driver.dart';
+import 'drivers/postgres_driver.dart';
 import 'exceptions/luex_exception.dart';
 import 'connection/connection.dart';
+import 'connection/sqlite_connection.dart';
+import 'connection/postgres_connection.dart';
 
 import 'runner.dart';
 
@@ -52,12 +54,18 @@ class Database {
     if (connection is SqliteConnection) {
       return SqliteDriver(connection);
     }
+    if (connection is PostgresConnection) {
+      return PostgresDriver(connection);
+    }
     throw LuexException('Runner not found');
   }
 
   Grammar getGrammar(Connection connection) {
     if (connection is SqliteConnection) {
       return SqliteGrammar();
+    }
+    if (connection is PostgresConnection) {
+      return PostgresGrammar();
     }
     throw LuexException('Grammar not found');
   }

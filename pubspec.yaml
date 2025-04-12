@@ -7,3 +7,4 @@ environment:
 
 workspace:
   - libs/lunart_core
+  - libs/lunart_express

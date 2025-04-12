@@ -19,6 +19,8 @@ class PostgresConnection implements Connection {
   final String password;
   final PostgresSslMode sslMode;
 
+  /// WARNING: This defaults are for local development only.
+  /// In the real world, You might want to change it to be more secure
   factory PostgresConnection.defaults({
     String host = 'localhost',
     int port = 5432,

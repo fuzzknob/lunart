@@ -2,19 +2,25 @@ import 'package:luex/luex.dart';
 
 void main() async {
   // Initialize connection with Postgres server with defaults
+  // host = 'localhost',
+  // port = 5432,
+  // database = 'postgres',
+  // username = 'postgres',
+  // password = 'postgres',
+  // sslMode = PostgresSslMode.disable,
   final db = Database.init(PostgresConnection.defaults());
 
   // Post connection full options
-  // final db2 = Database.init(
-  //   PostgresConnection(
-  //     database: 'example',
-  //     host: 'example.com',
-  //     port: 5432,
-  //     username: 'example',
-  //     password: 'secure_password',
-  //     sslMode: PostgresSslMode.verifyFull,
-  //   ),
-  // );
+  final db2 = Database.init(
+    PostgresConnection(
+      database: 'example',
+      host: 'example.com',
+      port: 5432,
+      username: 'example',
+      password: 'secure_password',
+      sslMode: PostgresSslMode.verifyFull,
+    ),
+  );
 
   // SELECT
   final allUsers = await db.table('users').all();

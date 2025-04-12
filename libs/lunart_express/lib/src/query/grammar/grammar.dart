@@ -31,6 +31,9 @@ abstract class Grammar {
     // WHERE
     queryComponents.add(buildWhere(query));
 
+    // ORDER BY
+    queryComponents.add(buildOrderBy(query));
+
     // LIMIT
     queryComponents.add(buildLimit(query));
 
@@ -45,6 +48,24 @@ abstract class Grammar {
       return '*';
     }
     return columns.join(', ');
+  }
+
+  String buildOrderBy(QueryBuilder query) {
+    final orders = [];
+
+    for (final orderBy in query.orderBys) {
+      if (orderBy is DirectionalOrderBy) {
+        orders.add('${orderBy.column} ${orderBy.direction}');
+      }
+
+      if (orderBy is RawOrderBy) {
+        orders.add(orderBy.sql);
+      }
+    }
+
+    if (orders.isEmpty) return '';
+
+    return 'ORDER BY ${orders.join(', ')}';
   }
 
   String buildWhere(QueryBuilder query) {

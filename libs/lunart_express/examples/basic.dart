@@ -20,7 +20,7 @@ void main() async {
   // inserts a single row
   await db.table('users').insert({'name': 'Greg Guy'});
 
-  // inserts a multiple rows
+  // inserts multiple rows
   await db.table('users').insertMany([
     {'name': 'Greg Gal'},
     {'name': 'Victor Eee'},

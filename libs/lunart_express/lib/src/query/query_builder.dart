@@ -152,10 +152,16 @@ class QueryBuilder {
   QueryBuilder join(
     String table,
     String leftColumn,
-    String operator,
-    String rightColumn, {
+    String operatorOrRightColumn, [
+    String? rightColumn,
     String type = 'INNER',
-  }) {
+  ]) {
+    var operator = '=';
+    if (rightColumn == null) {
+      rightColumn = operatorOrRightColumn;
+    } else {
+      operator = operatorOrRightColumn;
+    }
     joins.add(
       ComparativeJoin(
         table: table,
@@ -174,13 +180,7 @@ class QueryBuilder {
     String operatorOrRightColumn, [
     String? rightColumn,
   ]) {
-    var operator = '=';
-    if (rightColumn == null) {
-      rightColumn = operatorOrRightColumn;
-    } else {
-      operator = operatorOrRightColumn;
-    }
-    return join(table, leftColumn, operator, rightColumn, type: 'LEFT');
+    return join(table, leftColumn, operatorOrRightColumn, rightColumn, 'LEFT');
   }
 
   QueryBuilder rightJoin(
@@ -189,13 +189,7 @@ class QueryBuilder {
     String operatorOrRightColumn, [
     String? rightColumn,
   ]) {
-    var operator = '=';
-    if (rightColumn == null) {
-      rightColumn = operatorOrRightColumn;
-    } else {
-      operator = operatorOrRightColumn;
-    }
-    return join(table, leftColumn, operator, rightColumn, type: 'RIGHT');
+    return join(table, leftColumn, operatorOrRightColumn, rightColumn, 'RIGHT');
   }
 
   QueryBuilder crossJoin(String table) {

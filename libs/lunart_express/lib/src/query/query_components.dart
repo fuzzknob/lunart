@@ -67,3 +67,26 @@ class RawOrderBy implements OrderBy {
 
   final String sql;
 }
+
+abstract interface class Join {}
+
+class ComparativeJoin implements Join {
+  const ComparativeJoin({
+    required this.type,
+    required this.table,
+    required this.operator,
+    required this.leftColumn,
+    required this.rightColumn,
+  });
+
+  final String type;
+  final String table;
+  final String operator;
+  final String leftColumn;
+  final String rightColumn;
+}
+
+class CrossJoin implements Join {
+  const CrossJoin(this.table);
+  final String table;
+}

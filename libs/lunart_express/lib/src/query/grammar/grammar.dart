@@ -28,6 +28,9 @@ abstract class Grammar {
     // FROM
     queryComponents.add('FROM ${query.table}');
 
+    // JOINS
+    queryComponents.add(buildJoins(query));
+
     // WHERE
     queryComponents.add(buildWhere(query));
 
@@ -130,6 +133,22 @@ abstract class Grammar {
     return 'LIMIT $limit';
   }
 
+  String buildJoins(QueryBuilder query) {
+    if (query.joins.isEmpty) return '';
+    var components = [];
+    for (final join in query.joins) {
+      if (join is ComparativeJoin) {
+        components.add(
+          '${join.type} JOIN ${join.table} ON ${join.leftColumn} ${join.operator} ${join.rightColumn}',
+        );
+      }
+      if (join is CrossJoin) {
+        components.add('CROSS JOIN ${join.table}');
+      }
+    }
+    return components.join(' ');
+  }
+
   String buildInsertQuery(
     QueryBuilder query,
     List<Map<String, Object?>> values,
@@ -140,8 +159,6 @@ abstract class Grammar {
 
     final columns = values.first.keys.toSet();
 
-    // final placeholder =
-    //     '(${columns.map((v) => _buildParameter(v)).join(', ')})';
     final val = values
         .map((value) => '(${value.values.map(_buildParameter).join(', ')})')
         .join(', ');

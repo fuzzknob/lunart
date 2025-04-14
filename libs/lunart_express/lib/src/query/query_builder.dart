@@ -16,14 +16,21 @@ class QueryBuilder {
   final Runner runner;
   final String table;
   final Grammar grammar;
-  final List<Where> whereList = [];
   final String identityColumn;
 
-  String sql = '';
+  final List<Join> joins = [];
+  final List<Where> whereList = [];
+  final List<OrderBy> orderBys = [];
   List<String>? columns;
-  int? sqlLimit;
-  List<OrderBy> orderBys = [];
   final queryBindings = QueryBindings();
+  int? sqlLimit;
+
+  String sql = '';
+
+  QueryBuilder select(List<String> columns) {
+    this.columns = columns;
+    return this;
+  }
 
   QueryBuilder where(String column, Object operatorOrValue, [Object? value]) {
     return _where(
@@ -142,6 +149,60 @@ class QueryBuilder {
     );
   }
 
+  QueryBuilder join(
+    String table,
+    String leftColumn,
+    String operator,
+    String rightColumn, {
+    String type = 'INNER',
+  }) {
+    joins.add(
+      ComparativeJoin(
+        table: table,
+        leftColumn: leftColumn,
+        operator: operator,
+        rightColumn: rightColumn,
+        type: type.toUpperCase(),
+      ),
+    );
+    return this;
+  }
+
+  QueryBuilder leftJoin(
+    String table,
+    String leftColumn,
+    String operatorOrRightColumn, [
+    String? rightColumn,
+  ]) {
+    var operator = '=';
+    if (rightColumn == null) {
+      rightColumn = operatorOrRightColumn;
+    } else {
+      operator = operatorOrRightColumn;
+    }
+    return join(table, leftColumn, operator, rightColumn, type: 'LEFT');
+  }
+
+  QueryBuilder rightJoin(
+    String table,
+    String leftColumn,
+    String operatorOrRightColumn, [
+    String? rightColumn,
+  ]) {
+    var operator = '=';
+    if (rightColumn == null) {
+      rightColumn = operatorOrRightColumn;
+    } else {
+      operator = operatorOrRightColumn;
+    }
+    return join(table, leftColumn, operator, rightColumn, type: 'RIGHT');
+  }
+
+  QueryBuilder crossJoin(String table) {
+    joins.add(CrossJoin(table));
+    return this;
+  }
+
   QueryBuilder orderBy(String column, [String direction = 'ASC']) {
     direction = direction.toUpperCase();
 
@@ -167,7 +228,9 @@ class QueryBuilder {
   Future<QueryResult?> all([List<String>? columns]) => get(columns);
 
   Future<QueryResult?> get([List<String>? columns]) async {
-    this.columns = columns;
+    if (columns != null) {
+      this.columns = columns;
+    }
     sql = grammar.buildSelectQuery(this);
     return runner.runSelectQuery(this);
   }
@@ -193,7 +256,6 @@ class QueryBuilder {
   Future<void> insertMany(List<Map<String, Object?>> values) {
     queryBindings.values = values;
     sql = grammar.buildInsertQuery(this, values);
-    // final parameters = values.expand((v) => v.values).toList();
     return runner.runInsertQuery(this);
   }
 

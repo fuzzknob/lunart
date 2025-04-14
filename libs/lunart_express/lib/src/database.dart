@@ -29,6 +29,7 @@ class Database {
     String connectionName = 'default',
     String identityColumn = 'id',
   }) {
+    // TODO: make it better lol. This sucks
     final connection = getConnection(connectionName);
     final driver = getDriver(connection);
     final grammar = getGrammar(connection);

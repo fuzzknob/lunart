@@ -1,17 +1,13 @@
+import '../drivers/sqlite_driver.dart';
+import '../query/grammar/sqlite_grammar.dart';
 import 'connection.dart';
 
-enum SqliteConnectionMode { inMemory, file }
+// enum SqliteConnectionMode { inMemory, file }
 
 class SqliteConnection implements Connection {
-  SqliteConnection({
-    required this.mode,
-    this.file,
-    this.pool,
-    this.runInIsolate = true,
-  });
+  SqliteConnection({required this.file, this.pool, this.runInIsolate = true});
 
-  final SqliteConnectionMode mode;
-  final String? file;
+  final String file;
   final int? pool;
   final bool runInIsolate;
 
@@ -19,17 +15,19 @@ class SqliteConnection implements Connection {
     String file, {
     int? pool,
     bool runInIsolate = true,
-  }) => SqliteConnection(
-    mode: SqliteConnectionMode.file,
-    file: file,
-    pool: pool,
-    runInIsolate: runInIsolate,
-  );
+  }) => SqliteConnection(file: file, pool: pool, runInIsolate: runInIsolate);
 
-  factory SqliteConnection.memory({int? pool, bool runInIsolate = false}) =>
-      SqliteConnection(
-        mode: SqliteConnectionMode.file,
-        pool: pool,
-        runInIsolate: runInIsolate,
-      );
+  // TODO: find a better way to support in memory sqlite
+  // factory SqliteConnection.memory({int? pool, bool runInIsolate = false}) =>
+  //     SqliteConnection(
+  //       mode: SqliteConnectionMode.inMemory,
+  //       pool: pool,
+  //       runInIsolate: runInIsolate,
+  //     );
+
+  @override
+  SqliteDriver get driver => SqliteDriver(this);
+
+  @override
+  SqliteGrammar get grammar => SqliteGrammar();
 }

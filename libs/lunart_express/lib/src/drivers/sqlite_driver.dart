@@ -76,18 +76,23 @@ class SqliteDriver implements Driver {
   }
 
   Future<T?> _run<T>(T? Function(sl.Database) cb) async {
-    return Isolate.run(() async {
+    T? runner() {
       T? result;
-      final db =
-          connection.mode == SqliteConnectionMode.file
-              ? sl.sqlite3.open(connection.file!)
-              : sl.sqlite3.openInMemory();
+      final db = sl.sqlite3.open(connection.file);
       try {
         result = cb(db);
       } finally {
         db.dispose();
       }
       return result;
-    });
+    }
+
+    if (connection.runInIsolate) {
+      return Isolate.run(() async {
+        return runner();
+      });
+    }
+
+    return runner();
   }
 }

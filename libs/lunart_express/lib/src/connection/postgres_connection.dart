@@ -1,3 +1,5 @@
+import '../drivers/postgres_driver.dart';
+import '../query/grammar/postgres_grammar.dart';
 import 'connection.dart';
 
 enum PostgresSslMode { disable, require, verifyFull }
@@ -36,4 +38,10 @@ class PostgresConnection implements Connection {
     password: password,
     sslMode: sslMode,
   );
+
+  @override
+  PostgresDriver get driver => PostgresDriver(this);
+
+  @override
+  PostgresGrammar get grammar => PostgresGrammar();
 }

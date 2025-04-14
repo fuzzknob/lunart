@@ -42,8 +42,13 @@ void main() async {
 
   print(results5);
 
-  // Where In query
+  // Where in query
   // SELECT * FROM users WHERE id IN (1, 2, 4)
   final results6 = await db.table('users').whereIn('id', [1, 2, 4]).get();
   print(results6);
+
+  //  Where between query
+  // SELECT * FROM users WHERE id BETWEEN 30 AND 40
+  final results7 = await db.table('users').whereBetween('age', 30, 40).get();
+  print(results7);
 }

@@ -102,6 +102,11 @@ abstract class Grammar {
           trimConjunction(where.conjunction, buildWhereIn(where, query)),
         );
       }
+      if (where is WhereBetween) {
+        statements.add(
+          trimConjunction(where.conjunction, buildWhereBetween(where, query)),
+        );
+      }
     }
 
     return 'WHERE ${statements.join(' ')}';
@@ -125,6 +130,10 @@ abstract class Grammar {
     final values = where.values.map((v) => _buildParameter(v)).join(', ');
     final operator = where.not ? 'NOT IN' : 'IN';
     return '${where.column} $operator ($values)';
+  }
+
+  String buildWhereBetween(WhereBetween where, QueryBuilder query) {
+    return '${where.column} ${where.not ? 'NOT ' : ''}BETWEEN ${_buildParameter(where.min)} AND ${_buildParameter(where.max)}';
   }
 
   String buildLimit(QueryBuilder query) {

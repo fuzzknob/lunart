@@ -149,6 +149,28 @@ class QueryBuilder {
     );
   }
 
+  QueryBuilder whereBetween(String column, Object min, Object max) {
+    return _whereBetween(column: column, min: min, max: max);
+  }
+
+  QueryBuilder orWhereBetween(String column, Object min, Object max) {
+    return _whereBetween(column: column, min: min, max: max, conjunction: 'OR');
+  }
+
+  QueryBuilder whereNotBetween(String column, Object min, Object max) {
+    return _whereBetween(column: column, min: min, max: max, not: true);
+  }
+
+  QueryBuilder orWhereNotBetween(String column, Object min, Object max) {
+    return _whereBetween(
+      column: column,
+      min: min,
+      max: max,
+      conjunction: 'OR',
+      not: true,
+    );
+  }
+
   QueryBuilder join(
     String table,
     String leftColumn,
@@ -338,6 +360,27 @@ class QueryBuilder {
       WhereIn(
         column: column,
         values: values,
+        conjunction: conjunction,
+        not: not,
+      ),
+    );
+    return this;
+  }
+
+  QueryBuilder _whereBetween({
+    required String column,
+    required Object min,
+    required Object max,
+    String conjunction = 'AND',
+    bool not = false,
+  }) {
+    // order matters here
+    queryBindings.where.addAll([min, max]);
+    whereList.add(
+      WhereBetween(
+        column: column,
+        min: min,
+        max: max,
         conjunction: conjunction,
         not: not,
       ),

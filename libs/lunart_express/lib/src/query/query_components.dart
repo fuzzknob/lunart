@@ -53,6 +53,22 @@ class WhereIn implements Where {
   final bool not;
 }
 
+class WhereBetween implements Where {
+  const WhereBetween({
+    required this.column,
+    required this.min,
+    required this.max,
+    this.conjunction = 'AND',
+    this.not = false,
+  });
+
+  final String column;
+  final Object min;
+  final Object max;
+  final String conjunction;
+  final bool not;
+}
+
 abstract interface class OrderBy {}
 
 class DirectionalOrderBy implements OrderBy {

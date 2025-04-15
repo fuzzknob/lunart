@@ -44,9 +44,9 @@ class Server {
 
   Future<Server> serve(
     RequestHandler router, {
-    port = 8000,
-    host = '0.0.0.0',
-    silent = false,
+    int port = 8000,
+    String host = '0.0.0.0',
+    bool silent = false,
   }) async {
     _router = router;
     final httpServer = await HttpServer.bind(host, port);

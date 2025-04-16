@@ -67,8 +67,8 @@ class Response {
     String value, {
     bool httpOnly = true,
     bool secure = true,
+    String path = '/',
     String? domain,
-    String? path,
     DateTime? expires,
     Duration? maxAge,
     SameSite? sameSite,
@@ -94,8 +94,8 @@ class Response {
     String value, {
     bool httpOnly = true,
     bool secure = true,
+    String path = '/',
     String? domain,
-    String? path,
     DateTime? expires,
     Duration? maxAge,
     SameSite? sameSite,

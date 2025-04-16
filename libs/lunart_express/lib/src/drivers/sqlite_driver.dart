@@ -56,8 +56,6 @@ class SqliteDriver implements Driver {
     String query, [
     List<Object?> parameters = const [],
   ]) {
-    print(query);
-    print(parameters);
     return _execute(query, parameters);
   }
 
@@ -70,6 +68,7 @@ class SqliteDriver implements Driver {
     String query, [
     List<Object?> parameters = const [],
   ]) async {
+    // TODO: handle writes with limited number of isolates to prevent deadlocks
     return _run((db) {
       db.execute(query, parameters);
     });

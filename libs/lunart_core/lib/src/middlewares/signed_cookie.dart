@@ -9,8 +9,10 @@ Middleware signedCookie({required String secret}) {
     final response = await next();
     await Future.wait(
       response.cookies.map((cookie) async {
-        cookie.value = await sealer.seal(cookie.value);
-        cookie.hasSigned = true;
+        if (cookie.signed) {
+          cookie.value = await sealer.seal(cookie.value);
+          cookie.hasSigned = true;
+        }
       }),
     );
     return response;

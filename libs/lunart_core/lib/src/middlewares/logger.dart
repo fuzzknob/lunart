@@ -17,8 +17,10 @@ Future<Response> logger(Request request, Next next) async {
   final startTime = DateTime.now();
   try {
     final response = await next();
+    final statusCode = response.statusCode;
     _printLog(
-      '${startTime.toString()} [${request.method}] ${request.path} took ${watch.elapsed.inMilliseconds}ms',
+      '${startTime.toString()} [${request.method}] ${request.path} $statusCode took ${watch.elapsed.inMilliseconds}ms',
+      statusCode == 500 ? _LogType.error : _LogType.log,
     );
     return response;
   } on LunartException catch (e) {

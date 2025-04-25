@@ -5,7 +5,8 @@ import '../server/server.dart';
 
 class SSEStream {
   SSEStream(this.socket) {
-    socket.done
+    socket
+        .drain()
         .onError((_, __) {
           // no-op
         })
@@ -47,8 +48,8 @@ class SSEStream {
   }
 
   /// Even though it looks like we're sending json here
-  /// but the fact is we're simply converting it to string and sending it to client
-  /// The client will receive it as a string and needs parse it.
+  /// but the fact is that we're simply converting it to string and sending it to the client.
+  /// The client will receive it as a string and will have to parse it.
   void sendJson(Object data, {String? event, String? id, int? retry}) {
     sendText(json.encode(data), event: event, id: id, retry: retry);
   }

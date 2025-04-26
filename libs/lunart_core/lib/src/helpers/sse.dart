@@ -11,6 +11,14 @@ class SSEStream {
           // no-op
         })
         .whenComplete(() {
+          close();
+        });
+
+    socket.done
+        .onError((_, __) {
+          // no-op
+        })
+        .whenComplete(() {
           for (final listener in onCloseListeners) {
             listener();
           }

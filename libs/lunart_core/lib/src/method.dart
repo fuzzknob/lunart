@@ -24,7 +24,7 @@ enum Method {
     return value;
   }
 
-  static Method fromString(String method) {
+  factory Method.fromString(String method) {
     return switch (method.toUpperCase()) {
       'GET' => Method.get,
       'POST' => Method.post,

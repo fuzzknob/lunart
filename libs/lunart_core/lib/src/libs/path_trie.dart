@@ -52,14 +52,16 @@ class PathTrie {
     return PathLookupResult(parameters: parameters, path: fullPath);
   }
 
-  void printTrie([Node? node, String prefix = '']) {
+  List<String> printTrie([Node? node, String prefix = '', List<String>? trie]) {
+    trie ??= [];
     node ??= rootNode;
     if (node.isAPathEnd) {
-      print(prefix.isEmpty ? '/' : prefix);
+      trie.add(prefix.isEmpty ? '/' : prefix);
     }
     for (final entry in node.children.entries) {
-      printTrie(entry.value, '$prefix/${entry.key}');
+      printTrie(entry.value, '$prefix/${entry.key}', trie);
     }
+    return trie;
   }
 }
 

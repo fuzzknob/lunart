@@ -14,8 +14,8 @@ class Router implements RequestHandler {
   late final String prefix;
   late final List<Middleware> _globalMiddlewares;
 
-  final _routesMap = <String, RouteHandler>{};
-  final _pathTrie = PathTrie();
+  final routesMap = <String, RouteHandler>{};
+  final pathTrie = PathTrie();
 
   factory Router.nest(
     String prefix, {
@@ -29,13 +29,13 @@ class Router implements RequestHandler {
     List<Middleware> middlewares = const [],
   }) {
     final fullPath = _buildPath(path);
-    _routesMap[_createRouteMapKey(fullPath, method)] = RouteHandler(
+    routesMap[_createRouteMapKey(fullPath, method)] = RouteHandler(
       path: fullPath,
       method: method,
       handler: handler,
       middlewares: [..._globalMiddlewares, ...middlewares],
     );
-    _pathTrie.addPath(fullPath);
+    pathTrie.addPath(fullPath);
     return this;
   }
 
@@ -70,12 +70,12 @@ class Router implements RequestHandler {
   }) => add(path, Method.delete, handler, middlewares: middlewares);
 
   Router merge(Router router) {
-    for (final handler in router._routesMap.values) {
+    for (final handler in router.routesMap.values) {
       final path = _buildPath(handler.path);
-      _routesMap[_createRouteMapKey(path, handler.method)] = handler.copyWith(
+      routesMap[_createRouteMapKey(path, handler.method)] = handler.copyWith(
         path: path,
       );
-      _pathTrie.addPath(path);
+      pathTrie.addPath(path);
     }
     return this;
   }
@@ -84,16 +84,16 @@ class Router implements RequestHandler {
   Future<Response> handleRequest(Request request) async {
     final path = request.path;
     final method = request.method;
-    var handler = _routesMap[_createRouteMapKey(path, method)];
+    var handler = routesMap[_createRouteMapKey(path, method)];
     if (handler != null && !path.contains(':')) {
       return handler.invoke(request);
     }
-    final result = _pathTrie.lookupPath(path);
+    final result = pathTrie.lookupPath(path);
     if (result == null) {
       throw NotFoundException("'$path' path not found");
     }
     request.parameters = result.parameters;
-    handler = _routesMap[_createRouteMapKey(result.path, method)];
+    handler = routesMap[_createRouteMapKey(result.path, method)];
     if (handler == null) {
       throw NotFoundException('"$path" path not found');
     }

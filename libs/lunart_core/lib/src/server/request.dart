@@ -18,12 +18,7 @@ class Request {
   Map<String, dynamic> parameters = {};
   Future<String?> Function(String, {Duration? maxAge})? signedCookieParser;
 
-  List<Cookie> get cookies =>
-      nativeRequest.cookies.map((cookie) {
-        cookie.name = Uri.decodeQueryComponent(cookie.name);
-        cookie.value = Uri.decodeQueryComponent(cookie.value);
-        return cookie;
-      }).toList();
+  List<Cookie> get cookies => nativeRequest.cookies;
 
   String? getCookie(String name) {
     final cookie = cookies.firstWhereOrNull((cookie) => cookie.name == name);

@@ -149,5 +149,257 @@ void main() {
 
       expect(response?.body, 'hello');
     });
+
+    test('returns 404 when path not found', () async {
+      router?.get('/valid-path', (req) => res.text('found'));
+
+      request?.path = '/invalid-path';
+
+      expect(
+        () => router?.handleRequest(request!),
+        throwsA(isA<NotFoundException>()),
+      );
+    });
+
+    test('returns 404 when method not allowed', () async {
+      router?.get('/valid-path', (req) => res.text('found'));
+
+      request?.path = '/valid-path';
+      request?.method = Method.post;
+
+      expect(
+        () => router?.handleRequest(request!),
+        throwsA(isA<NotFoundException>()),
+      );
+    });
+
+    test('handles multiple path parameters', () async {
+      router?.get(
+        '/users/:userId/posts/:postId',
+        (req) =>
+            res.text('${req.parameters['userId']}-${req.parameters['postId']}'),
+      );
+
+      request?.path = '/users/123/posts/456';
+
+      final response = await router?.handleRequest(request!);
+
+      expect(response?.body, '123-456');
+    });
+  });
+
+  group('middleware tests', () {
+    Router? router;
+    MockRequest? request;
+
+    setUp(() {
+      router = Router();
+      request = MockRequest();
+    });
+
+    test('global middleware is applied to all routes', () async {
+      // Create router with global middleware
+      router = Router(
+        middlewares: [(req, next) => res.text('global middleware')],
+      );
+
+      router?.get('/', (req) => res.text('handler'));
+
+      request?.path = '/';
+
+      final response = await router?.handleRequest(request!);
+
+      expect(response?.body, 'global middleware');
+    });
+
+    test('route-specific middleware is applied', () async {
+      router?.get(
+        '/',
+        (req) => res.text('handler'),
+        middlewares: [(req, next) => res.text('route middleware')],
+      );
+
+      request?.path = '/';
+
+      final response = await router?.handleRequest(request!);
+
+      expect(response?.body, 'route middleware');
+    });
+
+    test('middleware chain executes in correct order', () async {
+      final order = <String>[];
+
+      router = Router(
+        middlewares: [
+          (req, next) {
+            order.add('global1');
+            return next();
+          },
+          (req, next) {
+            order.add('global2');
+            return next();
+          },
+        ],
+      );
+
+      router?.get(
+        '/',
+        (req) {
+          order.add('handler');
+          return res.text('done');
+        },
+        middlewares: [
+          (req, next) {
+            order.add('route1');
+            return next();
+          },
+          (req, next) {
+            order.add('route2');
+            return next();
+          },
+        ],
+      );
+
+      request?.path = '/';
+
+      await router?.handleRequest(request!);
+
+      expect(order, ['global1', 'global2', 'route1', 'route2', 'handler']);
+    });
+
+    test('middleware can short-circuit request handling', () async {
+      router = Router(
+        middlewares: [
+          (req, next) => res.text('short-circuit'),
+          (req, next) {
+            fail('This middleware should not be called');
+          },
+        ],
+      );
+
+      router?.get('/', (req) {
+        fail('This handler should not be called');
+      });
+
+      request?.path = '/';
+
+      final response = await router?.handleRequest(request!);
+
+      expect(response?.body, 'short-circuit');
+    });
+  });
+
+  group('nested router tests', () {
+    Router? mainRouter;
+    Router? nestedRouter;
+    MockRequest? request;
+
+    setUp(() {
+      mainRouter = Router();
+      nestedRouter = Router.nest('api');
+      request = MockRequest();
+    });
+
+    test('nested router handles routes with correct prefix', () async {
+      nestedRouter?.get('/users', (req) => res.text('users'));
+      mainRouter?.merge(nestedRouter!);
+
+      request?.path = '/api/users';
+
+      final response = await mainRouter?.handleRequest(request!);
+
+      expect(response?.body, 'users');
+    });
+
+    test('nested router with root path', () async {
+      nestedRouter?.get('/', (req) => res.text('api root'));
+      mainRouter?.merge(nestedRouter!);
+
+      request?.path = '/api';
+
+      final response = await mainRouter?.handleRequest(request!);
+
+      expect(response?.body, 'api root');
+    });
+
+    test('nested routers with multiple levels', () async {
+      final v1Router = Router.nest('v1');
+      v1Router.get('/products', (req) => res.text('v1 products'));
+
+      nestedRouter?.merge(v1Router);
+      mainRouter?.merge(nestedRouter!);
+
+      request?.path = '/api/v1/products';
+
+      final response = await mainRouter?.handleRequest(request!);
+
+      expect(response?.body, 'v1 products');
+    });
+
+    test('nested router with path parameters', () async {
+      nestedRouter?.get('/users/:id', (req) => res.text(req.parameters['id']));
+      mainRouter?.merge(nestedRouter!);
+
+      request?.path = '/api/users/123';
+
+      final response = await mainRouter?.handleRequest(request!);
+
+      expect(response?.body, '123');
+    });
+
+    test('nested router with middleware', () async {
+      nestedRouter = Router.nest(
+        'api',
+        middlewares: [(req, next) => res.text('api middleware')],
+      );
+
+      nestedRouter?.get('/users', (req) => res.text('users'));
+      mainRouter?.merge(nestedRouter!);
+
+      request?.path = '/api/users';
+
+      final response = await mainRouter?.handleRequest(request!);
+
+      expect(response?.body, 'api middleware');
+    });
+  });
+
+  group('router merge tests', () {
+    Router? mainRouter;
+    Router? otherRouter;
+    MockRequest? request;
+
+    setUp(() {
+      mainRouter = Router();
+      otherRouter = Router();
+      request = MockRequest();
+    });
+
+    test('merges routes from another router', () async {
+      otherRouter?.get('/other', (req) => res.text('other route'));
+      mainRouter?.merge(otherRouter!);
+
+      request?.path = '/other';
+
+      final response = await mainRouter?.handleRequest(request!);
+
+      expect(response?.body, 'other route');
+    });
+
+    test('merges routes with same path but different methods', () async {
+      otherRouter?.get('/resource', (req) => res.text('get resource'));
+      otherRouter?.post('/resource', (req) => res.text('post resource'));
+
+      mainRouter?.merge(otherRouter!);
+
+      request?.path = '/resource';
+
+      final getResponse = await mainRouter?.handleRequest(request!);
+      expect(getResponse?.body, 'get resource');
+
+      request?.method = Method.post;
+      final postResponse = await mainRouter?.handleRequest(request!);
+      expect(postResponse?.body, 'post resource');
+    });
   });
 }

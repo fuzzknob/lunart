@@ -12,6 +12,12 @@ export 'src/middlewares/signed_cookie.dart';
 export 'src/exceptions/lunart_exception.dart';
 export 'src/exceptions/not_found_exception.dart';
 export 'src/exceptions/bad_request_exception.dart';
+export 'src/exceptions/unauthorized_exception.dart';
+export 'src/exceptions/forbidden_exception.dart';
+export 'src/exceptions/not_implemented_exception.dart';
+export 'src/exceptions/bad_gateway_exception.dart';
+export 'src/exceptions/service_unavailable_exception.dart';
+export 'src/exceptions/gateway_timeout_exception.dart';
 
 export 'src/helpers/sse.dart';
 

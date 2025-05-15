@@ -1,14 +1,14 @@
 import '../exceptions/lunart_exception.dart';
 
-class BadRequestException extends LunartException {
-  const BadRequestException([
+class GatewayTimeoutException extends LunartException {
+  const GatewayTimeoutException([
     String? message,
     Object? error,
     StackTrace? stackTrace,
   ]) : super(
-         statusCode: 400,
+         statusCode: 504,
          message: message,
-         log: false,
+         log: true,
          error: error,
          stackTrace: stackTrace,
        );

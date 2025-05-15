@@ -1,14 +1,14 @@
 import '../exceptions/lunart_exception.dart';
 
-class BadRequestException extends LunartException {
-  const BadRequestException([
+class ServiceUnavailableException extends LunartException {
+  const ServiceUnavailableException([
     String? message,
     Object? error,
     StackTrace? stackTrace,
   ]) : super(
-         statusCode: 400,
+         statusCode: 503,
          message: message,
-         log: false,
+         log: true,
          error: error,
          stackTrace: stackTrace,
        );

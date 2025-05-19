@@ -18,6 +18,7 @@ export 'src/exceptions/not_implemented_exception.dart';
 export 'src/exceptions/bad_gateway_exception.dart';
 export 'src/exceptions/service_unavailable_exception.dart';
 export 'src/exceptions/gateway_timeout_exception.dart';
+export 'src/exceptions/internal_server_error.dart';
 
 export 'src/helpers/sse.dart';
 

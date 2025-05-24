@@ -1,21 +1,25 @@
 enum Method {
   get,
+  head,
   post,
   put,
-  patch,
-  head,
+  delete,
+  connect,
   options,
-  delete;
+  trace,
+  patch;
 
   String get value {
     return switch (this) {
       (Method.get) => 'GET',
+      (Method.head) => 'HEAD',
       (Method.post) => 'POST',
       (Method.put) => 'PUT',
-      (Method.patch) => 'PATCH',
       (Method.delete) => 'DELETE',
-      (Method.head) => 'HEAD',
+      (Method.connect) => 'CONNECT',
       (Method.options) => 'OPTIONS',
+      (Method.trace) => 'TRACE',
+      (Method.patch) => 'PATCH',
     };
   }
 
@@ -27,12 +31,14 @@ enum Method {
   factory Method.fromString(String method) {
     return switch (method.toUpperCase()) {
       'GET' => Method.get,
+      'HEAD' => Method.head,
       'POST' => Method.post,
       'PUT' => Method.put,
-      'PATCH' => Method.patch,
       'DELETE' => Method.delete,
-      'HEAD' => Method.head,
+      'CONNECT' => Method.connect,
       'OPTIONS' => Method.options,
+      'TRACE' => Method.trace,
+      'PATCH' => Method.patch,
       _ => throw Exception('Unknown method => $method'),
     };
   }

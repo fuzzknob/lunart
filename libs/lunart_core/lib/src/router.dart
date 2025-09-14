@@ -22,6 +22,20 @@ class Router implements RequestHandler {
     List<Middleware> middlewares = const [],
   }) => Router(prefix: prefix, middlewares: middlewares);
 
+  Router group(
+    void Function(Router) builder, {
+    String prefix = '',
+    List<Middleware> middlewares = const [],
+  }) {
+    final groupRouter = Router(prefix: prefix, middlewares: middlewares);
+
+    builder(groupRouter);
+
+    merge(groupRouter);
+
+    return this;
+  }
+
   Router add(
     String path,
     Method method,

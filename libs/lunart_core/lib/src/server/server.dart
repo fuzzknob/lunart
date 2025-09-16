@@ -6,10 +6,10 @@ import 'package:mime/mime.dart';
 
 import '../exceptions/lunart_exception.dart';
 import '../exceptions/bad_request_exception.dart';
+import '../enums/method.dart';
 import '../helpers/sse.dart' as sse;
 import '../plugins/base_plugin.dart';
 import '../cookie.dart';
-import '../method.dart';
 import '../types.dart';
 import '../utils.dart';
 
@@ -50,10 +50,13 @@ class Server {
   }) async {
     _router = router;
     final httpServer = await HttpServer.bind(host, port);
+
     httpServer.listen(_handleRequest);
+
     if (!silent) {
       print('Started server at $host:$port');
     }
+
     return this;
   }
 

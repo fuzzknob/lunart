@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import '../method.dart';
+import '../enums/method.dart';
 import '../server/server.dart';
 import '../types.dart';
 

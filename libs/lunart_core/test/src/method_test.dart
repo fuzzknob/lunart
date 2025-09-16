@@ -1,4 +1,4 @@
-import 'package:lucore/src/method.dart';
+import 'package:lucore/src/enums/method.dart';
 
 import 'package:test/test.dart';
 

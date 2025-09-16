@@ -1,7 +1,7 @@
 import 'exceptions/not_found_exception.dart';
 import 'libs/path_trie.dart';
 import 'utils.dart';
-import 'method.dart';
+import 'enums/method.dart';
 import 'types.dart';
 import 'server/server.dart';
 

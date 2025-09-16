@@ -1,7 +1,8 @@
 export 'src/server/server.dart';
-export 'src/method.dart';
 export 'src/types.dart';
 export 'src/router.dart';
+
+export 'src/enums/method.dart';
 
 export 'src/middlewares/secure_headers.dart';
 export 'src/middlewares/error_handler.dart';

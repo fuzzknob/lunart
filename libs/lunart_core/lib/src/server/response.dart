@@ -11,7 +11,7 @@ class Response {
   Map<String, Object> get headers => _headers;
   Object get body => _body;
 
-  get hasHijacked => _hijacker != null;
+  bool get hasHijacked => _hijacker != null;
 
   Response status(int statusCode) {
     _statusCode = statusCode;

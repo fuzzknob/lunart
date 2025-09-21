@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:mime/mime.dart';
+
 import 'server/server.dart';
 import 'types.dart';
 
@@ -19,4 +23,14 @@ Future<Response> invokeHandler({
   }
 
   return invoke(0)(request);
+}
+
+Future<String?> getMimeType(File file) async {
+  final mimeType = lookupMimeType(file.path);
+
+  if (mimeType != null) return mimeType;
+
+  final bytes = await file.openRead(0, 2).first;
+
+  return lookupMimeType(file.path, headerBytes: bytes);
 }

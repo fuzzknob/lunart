@@ -134,6 +134,21 @@ class Response {
   Response streamEvent(void Function(sse.SSEStream) cb) =>
       sse.streamEvent(cb, this);
 
+  Response stream(Stream stream) {
+    _body = stream;
+
+    return this;
+  }
+
+  Future<Response> file(File file) async {
+    header(
+      'Content-Type',
+      await getMimeType(file) ?? 'application/octet-stream',
+    );
+
+    return stream(file.openRead());
+  }
+
   Response notFound() => status(HttpStatus.notFound);
 
   Response ok() => status(HttpStatus.ok);

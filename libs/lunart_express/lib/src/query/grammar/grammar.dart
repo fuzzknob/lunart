@@ -40,6 +40,9 @@ abstract class Grammar {
     // LIMIT
     queryComponents.add(buildLimit(query));
 
+    // OFFSET
+    queryComponents.add(buildOffset(query));
+
     return postBuildQuery(
       queryComponents.where((component) => component.isNotEmpty).join(' '),
     );
@@ -140,6 +143,14 @@ abstract class Grammar {
     final limit = query.sqlLimit;
     if (limit == null) return '';
     return 'LIMIT $limit';
+  }
+
+  String buildOffset(QueryBuilder query) {
+    final offset = query.sqlOffset;
+
+    if (offset == null) return '';
+
+    return 'OFFSET $offset';
   }
 
   String buildJoins(QueryBuilder query) {

@@ -24,6 +24,7 @@ class QueryBuilder {
   List<String>? columns;
   final queryBindings = QueryBindings();
   int? sqlLimit;
+  int? sqlOffset;
 
   String sql = '';
 
@@ -262,6 +263,11 @@ class QueryBuilder {
 
   QueryBuilder limit(int value) {
     sqlLimit = value;
+    return this;
+  }
+
+  QueryBuilder offset(int value) {
+    sqlOffset = value;
     return this;
   }
 

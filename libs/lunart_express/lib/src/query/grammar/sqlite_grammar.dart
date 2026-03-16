@@ -8,6 +8,7 @@ class SqliteGrammar extends Grammar {
       return super.buildWhereLike(where, query);
     }
     final operator = where.not ? 'NOT GLOB' : 'GLOB';
+
     return '${where.column} $operator ?';
   }
 }

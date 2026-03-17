@@ -2,14 +2,14 @@ part of 'server.dart';
 
 class Response {
   int _statusCode = HttpStatus.ok;
-  Object _body = '';
+  Object? _body = '';
   Map<String, Object> _headers = {};
   Function(HttpResponse, Response)? _hijacker;
   List<LunartCookie> cookies = [];
 
   int get statusCode => _statusCode;
   Map<String, Object> get headers => _headers;
-  Object get body => _body;
+  Object? get body => _body;
 
   bool get hasHijacked => _hijacker != null;
 
@@ -53,6 +53,12 @@ class Response {
   Response text(String text) {
     _body = text;
     header('content-type', 'text/plain');
+    return this;
+  }
+
+  Response setBody(dynamic body) {
+    _body = body;
+
     return this;
   }
 

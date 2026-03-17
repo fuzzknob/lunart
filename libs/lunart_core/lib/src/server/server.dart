@@ -17,8 +17,6 @@ import '../utils.dart';
 part 'request.dart';
 part 'response.dart';
 
-typedef Plugin = Function(Server server);
-
 abstract interface class RequestHandler {
   Future<Response> handleRequest(Request request);
 }

@@ -122,7 +122,7 @@ class Server {
     if (stream is Stream<List<int>>) {
       resStream = stream;
     } else if (stream is Stream<String>) {
-      resStream = stream.map((s) => s.codeUnits);
+      resStream = stream.map(convert.utf8.encode);
     } else if (stream is Stream<Uint8List>) {
       resStream = stream.map((s) => s.toList());
     }

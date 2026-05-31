@@ -31,7 +31,7 @@ class Response {
   /// Sets the content-type header to application/json
   Response json(dynamic body) {
     _body = convert.json.encode(body);
-    header('content-type', 'application/json');
+    header('content-type', 'application/json; charset=utf-8');
     return this;
   }
 
@@ -46,13 +46,13 @@ class Response {
   /// Sets the content-type header to text/html
   Response html(String html) {
     _body = html;
-    header('content-type', 'text/html');
+    header('content-type', 'text/html; charset=utf-8');
     return this;
   }
 
   Response text(String text) {
     _body = text;
-    header('content-type', 'text/plain');
+    header('content-type', 'text/plain; charset=utf-8');
     return this;
   }
 

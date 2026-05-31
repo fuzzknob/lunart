@@ -3,7 +3,7 @@ import 'package:lucore/lucore.dart';
 void main() {
   final router = Router();
 
-  router.get('/', (_) => res.message('Hello World'));
+  router.get('/', (_) => res.text('Hello world 😶‍🌫️'));
 
   router.post('/posts', (req) async {
     // get request body

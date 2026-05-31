@@ -3,7 +3,7 @@ description: An ergonomic server side ecosystem
 version: 0.0.1
 
 environment:
-  sdk: ^3.7.2
+  sdk: ^3.12.0
 
 workspace:
   - libs/lunart_core

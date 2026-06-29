@@ -1,0 +1,12 @@
+name: basic_example
+description: An ergonomic server side ecosystem
+
+version: 0.0.1
+
+resolution: workspace
+
+environment:
+  sdk: ^3.7.2
+
+dependencies:
+  lunart: 0.0.1

@@ -1,4 +1,4 @@
-name: lunart
+name: lunart_workspace
 description: An ergonomic server side ecosystem
 version: 0.0.1
 
@@ -6,5 +6,8 @@ environment:
   sdk: ^3.7.2
 
 workspace:
+  - libs/lunart
   - libs/lunart_core
   - libs/lunart_express
+  - libs/playground
+  - examples/basic

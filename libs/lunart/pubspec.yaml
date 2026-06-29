@@ -1,0 +1,12 @@
+name: lunart
+description: Lunart, An ergonomic framework
+version: 0.0.1
+
+environment:
+  sdk: ^3.7.2
+
+resolution: workspace
+
+dependencies:
+  lucore: 0.0.1
+  ansicolor: ^2.0.3

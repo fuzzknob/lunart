@@ -121,7 +121,7 @@ void main() {
       expect(result.parameters, {'id': '42'});
     });
 
-    test('wildcard matches a multiple segments', () {
+    test('wildcard matches multiple segments', () {
       final trie = PathTrie();
       trie.addPath('/assets/*');
 
@@ -165,6 +165,35 @@ void main() {
       expect(result, isNotNull);
       expect(result!.path, '/items/*');
       expect(result.parameters, isEmpty);
+    });
+
+    test('supports multiple wildcard in the trie', () {
+      final trie = PathTrie();
+      trie.addPath('/a/*');
+      trie.addPath('/b/*');
+
+      final resultA = trie.lookupPath('/a/value');
+      final resultB = trie.lookupPath('/b/value');
+
+      expect(resultA, isNotNull);
+      expect(resultA!.path, '/a/*');
+
+      expect(resultB, isNotNull);
+      expect(resultB!.path, '/b/*');
+    });
+
+    test('supports wildcard within a wildcard', () {
+      final trie = PathTrie();
+      trie.addPath('/a/*');
+      trie.addPath('/a/b/*');
+
+      final result = trie.lookupPath('/a/b/value');
+      final result2 = trie.lookupPath('/a/value');
+
+      expect(result, isNotNull);
+      expect(result!.path, '/a/b/*');
+      expect(result2, isNotNull);
+      expect(result2!.path, '/a/*');
     });
   });
 }

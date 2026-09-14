@@ -1,0 +1,12 @@
+{
+    "format_on_save": "on",
+    "disable_ai": false,
+    "lsp": {
+        "dart": {
+            "binary": {
+                "path": "/usr/bin/dart",
+                "arguments": ["language-server", "--protocol=lsp"]
+            }
+        }
+    }
+}

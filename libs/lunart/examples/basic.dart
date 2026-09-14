@@ -1,12 +1,3 @@
-# Lunart
-
-An ergonomic server side ecosystem.
-
-> ⚠️ Lunart is still in active development. Some features are still missing and some features might not be there yet.
-
-### Basic usage
-
-```dart
 import 'package:lunart/lunart.dart';
 
 void main() {
@@ -36,6 +27,3 @@ void main() {
       })
       .serve(); // Starts server at port 8000
 }
-```
-
-For more examples checkout [examples](https://github.com/fuzzknob/lunart/tree/main/libs/lunart/examples).

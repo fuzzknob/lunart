@@ -1,0 +1,7 @@
+[tasks.test]
+description = "Run the test suite for the project"
+run = "dart test"
+
+[tasks.test_lunart]
+description = "Run the test suite for lunart project"
+run = "dart test libs/lunart/tests"

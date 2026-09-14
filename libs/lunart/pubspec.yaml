@@ -1,0 +1,17 @@
+name: lunart
+description: Lunart, An ergonomic backend LIBRARY
+version: 0.0.1
+
+environment:
+    sdk: ^3.13.0
+
+resolution: workspace
+
+dependencies:
+    collection: ^1.19.1
+    crypto: ^3.0.7
+    mime: ^2.1.0
+
+dev_dependencies:
+    mocktail: ^1.0.5
+    test: ^1.32.0

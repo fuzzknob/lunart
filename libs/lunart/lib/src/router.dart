@@ -44,13 +44,16 @@ class Router implements RequestHandler {
     List<Middleware> middlewares = const [],
   }) {
     final fullPath = _buildPath(path);
+
     routesMap[_createRouteMapKey(fullPath, method)] = RouteHandler(
       path: fullPath,
       method: method,
       handler: handler,
       middlewares: [..._globalMiddlewares, ...middlewares],
     );
+
     pathTrie.addPath(fullPath);
+
     return this;
   }
 
@@ -109,22 +112,18 @@ class Router implements RequestHandler {
 
     final result = pathTrie.lookupPath(path);
 
-    if (result == null) {
-      throw NotFoundException(message: "'$path' path not found");
+    if (result != null) {
+      request.parameters = result.parameters;
+      handler = routesMap[_createRouteMapKey(result.path, method)];
+
+      if (handler != null) return handler.invoke(request);
     }
 
-    request.parameters = result.parameters;
-    handler = routesMap[_createRouteMapKey(result.path, method)];
-
-    if (handler == null) {
-      throw NotFoundException(message: "'$path' path not found");
-    }
-
-    return handler.invoke(request);
+    throw NotFoundException(message: "'$path' path not found");
   }
 
   String _buildPath(String path) {
-    if (prefix.isEmpty) return path;
+    if (prefix.isEmpty) return '/${_trimLeadingSlash(path)}';
 
     if (path == '/') return '/$prefix';
 

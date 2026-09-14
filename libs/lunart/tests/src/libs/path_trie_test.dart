@@ -121,13 +121,15 @@ void main() {
       expect(result.parameters, {'id': '42'});
     });
 
-    test('wildcard matches a single segment and is not greedy', () {
+    test('wildcard matches a multiple segments', () {
       final trie = PathTrie();
       trie.addPath('/assets/*');
 
       final result = trie.lookupPath('/assets/a/b');
 
-      expect(result, isNull);
+      expect(result, isNotNull);
+      expect(result!.path, '/assets/*');
+      expect(result.parameters, {});
     });
 
     test('returns null on empty trie', () {
@@ -138,17 +140,20 @@ void main() {
       expect(result, isNull);
     });
 
-    test('uses first inserted fallback when both parameter and wildcard exist', () {
-      final trie = PathTrie();
-      trie.addPath('/items/:id');
-      trie.addPath('/items/*');
+    test(
+      'uses first inserted fallback when both parameter and wildcard exist',
+      () {
+        final trie = PathTrie();
+        trie.addPath('/items/:id');
+        trie.addPath('/items/*');
 
-      final result = trie.lookupPath('/items/value');
+        final result = trie.lookupPath('/items/value');
 
-      expect(result, isNotNull);
-      expect(result!.path, '/items/:id');
-      expect(result.parameters, {'id': 'value'});
-    });
+        expect(result, isNotNull);
+        expect(result!.path, '/items/:id');
+        expect(result.parameters, {'id': 'value'});
+      },
+    );
 
     test('uses wildcard first when wildcard was inserted before parameter', () {
       final trie = PathTrie();

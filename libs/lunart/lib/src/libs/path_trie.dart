@@ -51,6 +51,10 @@ class PathTrie {
 
       if (child == null) return null;
 
+      if (pathSection == '*') {
+        return PathLookupResult(parameters: parameters, path: '$fullPath/*');
+      }
+
       if (pathSection.startsWith(':')) {
         final parameterName = pathSection.substring(1);
         parameters[parameterName] = Uri.decodeComponent(requestSection);
@@ -60,12 +64,22 @@ class PathTrie {
       currentNode = child;
     }
 
-    if (!currentNode.isAPathEnd) return null;
+    if (!currentNode.isAPathEnd && !fullPath.contains('*')) {
+      if (!currentNode.hasChild('*')) {
+        return null;
+      }
+
+      fullPath += '/*';
+    }
 
     return PathLookupResult(parameters: parameters, path: fullPath);
   }
 
-  List<String> printTrie([Node? node, String prefix = '', List<String>? trie]) {
+  List<String> getPathTriePaths([
+    Node? node,
+    String prefix = '',
+    List<String>? trie,
+  ]) {
     trie ??= [];
     node ??= rootNode;
 
@@ -74,7 +88,7 @@ class PathTrie {
     }
 
     for (final entry in node.children.entries) {
-      printTrie(entry.value, '$prefix/${entry.key}', trie);
+      getPathTriePaths(entry.value, '$prefix/${entry.key}', trie);
     }
 
     return trie;
@@ -84,6 +98,8 @@ class PathTrie {
 class Node {
   final children = <String, Node>{};
   bool isAPathEnd = false;
+
+  bool hasChild(String key) => children.containsKey(key);
 }
 
 class PathLookupResult({

@@ -4,4 +4,4 @@ run = "dart test"
 
 [tasks.test_lunart]
 description = "Run the test suite for lunart project"
-run = "dart test libs/lunart/tests"
+run = "dart test libs/lunart/tests --chain-stack-traces"

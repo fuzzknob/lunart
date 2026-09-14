@@ -31,8 +31,8 @@ class Lunart {
     return this;
   }
 
-  Lunart addRouter(Router router) {
-    this.router.merge(router);
+  Lunart mount(Router router) {
+    this.router.mount(router);
 
     return this;
   }

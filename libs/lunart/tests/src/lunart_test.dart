@@ -96,7 +96,7 @@ void main() {
       final app = Lunart(barebones: true);
       final externalRouter = Router()..get('/external', (_) => 'ok');
 
-      app.addRouter(externalRouter);
+      app.mount(externalRouter);
 
       final result = await app.router.handleRequest(
         _buildRequest(path: '/external', method: Method.get),

@@ -34,8 +34,8 @@ void main() {
   app.get('/', (_) => 'Hello from /');
 
   // Now add it to the app
-  app.addRouter(userRouter());
-  app.addRouter(postRouter());
+  app.mount(userRouter());
+  app.mount(postRouter());
 
   app.serve();
 }

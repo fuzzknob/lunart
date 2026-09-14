@@ -33,82 +33,94 @@ void main() {
       expect(result, 'ok');
     });
 
-    test('verb helpers register and resolve handlers for their methods', () async {
-      final router = Router()
-        ..get('/g', (_) => 'get')
-        ..post('/p', (_) => 'post')
-        ..put('/u', (_) => 'put')
-        ..patch('/pa', (_) => 'patch')
-        ..delete('/d', (_) => 'delete');
+    test(
+      'verb helpers register and resolve handlers for their methods',
+      () async {
+        final router = Router()
+          ..get('/g', (_) => 'get')
+          ..post('/p', (_) => 'post')
+          ..put('/u', (_) => 'put')
+          ..patch('/pa', (_) => 'patch')
+          ..delete('/d', (_) => 'delete');
 
-      expect(
-        await router.handleRequest(_buildRequest(path: '/g', method: Method.get)),
-        'get',
-      );
-      expect(
-        await router.handleRequest(_buildRequest(path: '/p', method: Method.post)),
-        'post',
-      );
-      expect(
-        await router.handleRequest(_buildRequest(path: '/u', method: Method.put)),
-        'put',
-      );
-      expect(
-        await router.handleRequest(
-          _buildRequest(path: '/pa', method: Method.patch),
-        ),
-        'patch',
-      );
-      expect(
-        await router.handleRequest(
-          _buildRequest(path: '/d', method: Method.delete),
-        ),
-        'delete',
-      );
-    });
+        expect(
+          await router.handleRequest(
+            _buildRequest(path: '/g', method: Method.get),
+          ),
+          'get',
+        );
+        expect(
+          await router.handleRequest(
+            _buildRequest(path: '/p', method: Method.post),
+          ),
+          'post',
+        );
+        expect(
+          await router.handleRequest(
+            _buildRequest(path: '/u', method: Method.put),
+          ),
+          'put',
+        );
+        expect(
+          await router.handleRequest(
+            _buildRequest(path: '/pa', method: Method.patch),
+          ),
+          'patch',
+        );
+        expect(
+          await router.handleRequest(
+            _buildRequest(path: '/d', method: Method.delete),
+          ),
+          'delete',
+        );
+      },
+    );
 
-    test('global middlewares run before route middlewares then handler', () async {
-      final calls = <String>[];
-      final router = Router(
-        middlewares: [
-          (_, next) async {
-            calls.add('global-before');
-            final value = await next();
-            calls.add('global-after');
-            return value;
+    test(
+      'global middlewares run before route middlewares then handler',
+      () async {
+        final calls = <String>[];
+        final router = Router(
+          middlewares: [
+            (_, next) async {
+              calls.add('global-before');
+              final value = await next();
+              calls.add('global-after');
+              return value;
+            },
+          ],
+        );
+
+        router.get(
+          '/mw',
+          (_) {
+            calls.add('handler');
+            return 'done';
           },
-        ],
-      );
+          middlewares: [
+            (_, next) async {
+              calls.add('route-before');
+              final value = await next();
+              calls.add('route-after');
+              return value;
+            },
+          ],
+        );
 
-      router.get(
-        '/mw',
-        (_) {
-          calls.add('handler');
-          return 'done';
-        },
-        middlewares: [
-          (_, next) async {
-            calls.add('route-before');
-            final value = await next();
-            calls.add('route-after');
-            return value;
-          },
-        ],
-      );
+        final result = await router.handleRequest(
+          _buildRequest(path: '/mw', method: Method.get),
+        );
 
-      final result = await router.handleRequest(
-        _buildRequest(path: '/mw', method: Method.get),
-      );
-
-      expect(result, 'done');
-      expect(calls, [
-        'global-before',
-        'route-before',
-        'handler',
-        'route-after',
-        'global-after',
-      ]);
-    });
+        expect(result, 'done');
+        expect(calls, [
+          'global-before',
+          'route-before',
+          'handler',
+          'route-after',
+          'global-after',
+        ]);
+      },
+    );
   });
 
   group('Router prefix, nest, merge, and group', () {
@@ -149,9 +161,10 @@ void main() {
 
     test('merge applies parent prefix to merged child routes', () async {
       final parent = Router(prefix: 'v1');
-      final child = Router(prefix: 'admin')..get('/users', (_) => 'child-users');
+      final child = Router(prefix: 'admin')
+        ..get('/users', (_) => 'child-users');
 
-      parent.merge(child);
+      parent.mount(child);
 
       final result = await parent.handleRequest(
         _buildRequest(path: '/v1/admin/users', method: Method.get),
@@ -199,17 +212,20 @@ void main() {
       expect(request.parameters, {'id': '42'});
     });
 
-    test('prefers exact route over dynamic fallback for same path shape', () async {
-      final router = Router()
-        ..get('/users/:id', (_) => 'dynamic')
-        ..get('/users/me', (_) => 'exact');
+    test(
+      'prefers exact route over dynamic fallback for same path shape',
+      () async {
+        final router = Router()
+          ..get('/users/:id', (_) => 'dynamic')
+          ..get('/users/me', (_) => 'exact');
 
-      final result = await router.handleRequest(
-        _buildRequest(path: '/users/me', method: Method.get),
-      );
+        final result = await router.handleRequest(
+          _buildRequest(path: '/users/me', method: Method.get),
+        );
 
-      expect(result, 'exact');
-    });
+        expect(result, 'exact');
+      },
+    );
 
     test('throws NotFoundException for unknown path', () async {
       final router = Router()..get('/known', (_) => 'ok');
@@ -222,16 +238,19 @@ void main() {
       );
     });
 
-    test('throws NotFoundException when method does not match exact route', () async {
-      final router = Router()..get('/users', (_) => 'ok');
+    test(
+      'throws NotFoundException when method does not match exact route',
+      () async {
+        final router = Router()..get('/users', (_) => 'ok');
 
-      await expectLater(
-        () => router.handleRequest(
-          _buildRequest(path: '/users', method: Method.post),
-        ),
-        throwsA(isA<NotFoundException>()),
-      );
-    });
+        await expectLater(
+          () => router.handleRequest(
+            _buildRequest(path: '/users', method: Method.post),
+          ),
+          throwsA(isA<NotFoundException>()),
+        );
+      },
+    );
 
     test('throws NotFoundException when dynamic path matches but method is missing', () async {
       final router = Router()..get('/users/:id', (_) => 'ok');

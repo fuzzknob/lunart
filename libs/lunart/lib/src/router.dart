@@ -8,7 +8,7 @@ import 'utils.dart';
 
 class Router implements RequestHandler {
   Router({String prefix = '', List<Middleware> middlewares = const []}) {
-    this.prefix = _trimLeadingSlash(prefix);
+    this.prefix = _trimSlashes(prefix);
     _globalMiddlewares = middlewares;
   }
 
@@ -32,7 +32,7 @@ class Router implements RequestHandler {
 
     builder(groupRouter);
 
-    merge(groupRouter);
+    mount(groupRouter);
 
     return this;
   }
@@ -87,10 +87,19 @@ class Router implements RequestHandler {
     List<Middleware> middlewares = const [],
   }) => add(path, Method.delete, handler, middlewares: middlewares);
 
-  Router merge(Router router) {
+  Router mount(Router router) {
     for (final handler in router.routesMap.values) {
       final path = _buildPath(handler.path);
-      routesMap[_createRouteMapKey(path, handler.method)] = handler.copyWith(
+      final mapKey = _createRouteMapKey(path, handler.method);
+
+      if (routesMap.containsKey(mapKey)) {
+        // TODO: use a proper logger instead of print
+        print(
+          '\x1B[33m[WARN]\x1B[0m Route conflict during mount: ${handler.method} $path already exists and will be replaced.',
+        );
+      }
+
+      routesMap[mapKey] = handler.copyWith(
         path: path,
       );
       pathTrie.addPath(path);
@@ -106,7 +115,7 @@ class Router implements RequestHandler {
 
     var handler = routesMap[_createRouteMapKey(path, method)];
 
-    if (handler != null && !path.contains(':')) {
+    if (handler != null) {
       return handler.invoke(request);
     }
 
@@ -123,17 +132,16 @@ class Router implements RequestHandler {
   }
 
   String _buildPath(String path) {
-    if (prefix.isEmpty) return '/${_trimLeadingSlash(path)}';
+    if (prefix.isEmpty) return '/${_trimSlashes(path)}';
 
     if (path == '/') return '/$prefix';
 
-    return '/$prefix/${_trimLeadingSlash(path)}';
+    return '/$prefix/${_trimSlashes(path)}';
   }
 
   String _createRouteMapKey(String path, Method method) => '$method@$path';
 
-  String _trimLeadingSlash(String path) =>
-      path.replaceFirst(RegExp(r'^\/'), '');
+  String _trimSlashes(String path) => path.replaceAll(RegExp(r'^/+|/+$'), '');
 }
 
 class RouteHandler {

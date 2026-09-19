@@ -58,16 +58,26 @@ class Server {
   }
 
   void handleRequest(HttpRequest httpRequest) async {
-    final request = await makeLunartRequest(httpRequest);
-    final response = await invokeHandler(
-      request: request,
-      middlewares: globalMiddlewares,
-      handler: router.handleRequest,
-    );
+    try {
+      final request = await makeLunartRequest(httpRequest);
+      final response = await invokeHandler(
+        request: request,
+        middlewares: globalMiddlewares,
+        handler: router.handleRequest,
+      );
 
-    final lunartResponse = await resTypeResolver.resolve(response);
+      final lunartResponse = await resTypeResolver.resolve(response);
 
-    await writeResponse(lunartResponse, httpRequest.response);
+      await writeResponse(lunartResponse, httpRequest.response);
+    } catch (e, stackTrace) {
+      print(e);
+      print(stackTrace);
+
+      writeResponse(
+        Res.status(500).text('Internal Server Error'),
+        httpRequest.response,
+      );
+    }
   }
 
   Stream<List<int>> getStreamedResponse(Stream stream) {

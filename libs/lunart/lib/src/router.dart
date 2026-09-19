@@ -63,6 +63,12 @@ class Router implements RequestHandler {
     List<Middleware> middlewares = const [],
   }) => add(path, Method.get, handler, middlewares: middlewares);
 
+  Router head(
+    String path,
+    Handler handler, {
+    List<Middleware> middlewares = const [],
+  }) => add(path, Method.head, handler, middlewares: middlewares);
+
   Router post(
     String path,
     Handler handler, {
@@ -75,17 +81,35 @@ class Router implements RequestHandler {
     List<Middleware> middlewares = const [],
   }) => add(path, Method.put, handler, middlewares: middlewares);
 
-  Router patch(
-    String path,
-    Handler handler, {
-    List<Middleware> middlewares = const [],
-  }) => add(path, Method.patch, handler, middlewares: middlewares);
-
   Router delete(
     String path,
     Handler handler, {
     List<Middleware> middlewares = const [],
   }) => add(path, Method.delete, handler, middlewares: middlewares);
+
+  Router connect(
+    String path,
+    Handler handler, {
+    List<Middleware> middlewares = const [],
+  }) => add(path, Method.connect, handler, middlewares: middlewares);
+
+  Router options(
+    String path,
+    Handler handler, {
+    List<Middleware> middlewares = const [],
+  }) => add(path, Method.options, handler, middlewares: middlewares);
+
+  Router trace(
+    String path,
+    Handler handler, {
+    List<Middleware> middlewares = const [],
+  }) => add(path, Method.trace, handler, middlewares: middlewares);
+
+  Router patch(
+    String path,
+    Handler handler, {
+    List<Middleware> middlewares = const [],
+  }) => add(path, Method.patch, handler, middlewares: middlewares);
 
   Router mount(Router router) {
     for (final handler in router.routesMap.values) {

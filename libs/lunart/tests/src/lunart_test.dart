@@ -132,7 +132,7 @@ void main() {
     });
 
     test('get helper registers GET route', () async {
-      final app = Lunart(barebones: true)..get('/g', (_) => 'get');
+      final app = Lunart(barebones: true).get('/g', (_) => 'get');
 
       final result = await app.router.handleRequest(
         _buildRequest(path: '/g', method: Method.get),
@@ -141,8 +141,18 @@ void main() {
       expect(result, 'get');
     });
 
+    test('head helper registers HEAD route', () async {
+      final app = Lunart(barebones: true).head('/h', (_) => 'head');
+
+      final result = await app.router.handleRequest(
+        _buildRequest(path: '/h', method: Method.head),
+      );
+
+      expect(result, 'head');
+    });
+
     test('post helper registers POST route', () async {
-      final app = Lunart(barebones: true)..post('/p', (_) => 'post');
+      final app = Lunart(barebones: true).post('/p', (_) => 'post');
 
       final result = await app.router.handleRequest(
         _buildRequest(path: '/p', method: Method.post),
@@ -152,7 +162,7 @@ void main() {
     });
 
     test('put helper registers PUT route', () async {
-      final app = Lunart(barebones: true)..put('/u', (_) => 'put');
+      final app = Lunart(barebones: true).put('/u', (_) => 'put');
 
       final result = await app.router.handleRequest(
         _buildRequest(path: '/u', method: Method.put),
@@ -161,24 +171,54 @@ void main() {
       expect(result, 'put');
     });
 
-    test('patch helper registers PATCH route', () async {
-      final app = Lunart(barebones: true)..patch('/pa', (_) => 'patch');
-
-      final result = await app.router.handleRequest(
-        _buildRequest(path: '/pa', method: Method.patch),
-      );
-
-      expect(result, 'patch');
-    });
-
     test('delete helper registers DELETE route', () async {
-      final app = Lunart(barebones: true)..delete('/d', (_) => 'delete');
+      final app = Lunart(barebones: true).delete('/d', (_) => 'delete');
 
       final result = await app.router.handleRequest(
         _buildRequest(path: '/d', method: Method.delete),
       );
 
       expect(result, 'delete');
+    });
+
+    test('connect helper registers CONNECT route', () async {
+      final app = Lunart(barebones: true).connect('/c', (_) => 'connect');
+
+      final result = await app.router.handleRequest(
+        _buildRequest(path: '/c', method: Method.connect),
+      );
+
+      expect(result, 'connect');
+    });
+
+    test('options helper registers OPTIONS route', () async {
+      final app = Lunart(barebones: true).options('/o', (_) => 'options');
+
+      final result = await app.router.handleRequest(
+        _buildRequest(path: '/o', method: Method.options),
+      );
+
+      expect(result, 'options');
+    });
+
+    test('trace helper registers TRACE route', () async {
+      final app = Lunart(barebones: true).trace('/t', (_) => 'trace');
+
+      final result = await app.router.handleRequest(
+        _buildRequest(path: '/t', method: Method.trace),
+      );
+
+      expect(result, 'trace');
+    });
+
+    test('patch helper registers PATCH route', () async {
+      final app = Lunart(barebones: true).patch('/pa', (_) => 'patch');
+
+      final result = await app.router.handleRequest(
+        _buildRequest(path: '/pa', method: Method.patch),
+      );
+
+      expect(result, 'patch');
     });
   });
 }

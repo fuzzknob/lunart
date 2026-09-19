@@ -37,17 +37,27 @@ void main() {
       'verb helpers register and resolve handlers for their methods',
       () async {
         final router = Router()
-          ..get('/g', (_) => 'get')
-          ..post('/p', (_) => 'post')
-          ..put('/u', (_) => 'put')
-          ..patch('/pa', (_) => 'patch')
-          ..delete('/d', (_) => 'delete');
+            .get('/g', (_) => 'get')
+            .head('/h', (_) => 'head')
+            .post('/p', (_) => 'post')
+            .put('/u', (_) => 'put')
+            .delete('/d', (_) => 'delete')
+            .connect('/c', (_) => 'connect')
+            .options('/o', (_) => 'options')
+            .trace('/t', (_) => 'trace')
+            .patch('/pa', (_) => 'patch');
 
         expect(
           await router.handleRequest(
             _buildRequest(path: '/g', method: Method.get),
           ),
           'get',
+        );
+        expect(
+          await router.handleRequest(
+            _buildRequest(path: '/h', method: Method.head),
+          ),
+          'head',
         );
         expect(
           await router.handleRequest(
@@ -63,15 +73,33 @@ void main() {
         );
         expect(
           await router.handleRequest(
-            _buildRequest(path: '/pa', method: Method.patch),
-          ),
-          'patch',
-        );
-        expect(
-          await router.handleRequest(
             _buildRequest(path: '/d', method: Method.delete),
           ),
           'delete',
+        );
+        expect(
+          await router.handleRequest(
+            _buildRequest(path: '/c', method: Method.connect),
+          ),
+          'connect',
+        );
+        expect(
+          await router.handleRequest(
+            _buildRequest(path: '/o', method: Method.options),
+          ),
+          'options',
+        );
+        expect(
+          await router.handleRequest(
+            _buildRequest(path: '/t', method: Method.trace),
+          ),
+          'trace',
+        );
+        expect(
+          await router.handleRequest(
+            _buildRequest(path: '/pa', method: Method.patch),
+          ),
+          'patch',
         );
       },
     );

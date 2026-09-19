@@ -60,6 +60,12 @@ class Lunart {
     List<Middleware> middlewares = const [],
   }) => add(path, Method.get, handler, middlewares: middlewares);
 
+  Lunart head(
+    String path,
+    Handler handler, {
+    List<Middleware> middlewares = const [],
+  }) => add(path, Method.head, handler, middlewares: middlewares);
+
   Lunart post(
     String path,
     Handler handler, {
@@ -71,6 +77,30 @@ class Lunart {
     Handler handler, {
     List<Middleware> middlewares = const [],
   }) => add(path, Method.put, handler, middlewares: middlewares);
+
+  Lunart delete(
+    String path,
+    Handler handler, {
+    List<Middleware> middlewares = const [],
+  }) => add(path, Method.delete, handler, middlewares: middlewares);
+
+  Lunart connect(
+    String path,
+    Handler handler, {
+    List<Middleware> middlewares = const [],
+  }) => add(path, Method.connect, handler, middlewares: middlewares);
+
+  Lunart options(
+    String path,
+    Handler handler, {
+    List<Middleware> middlewares = const [],
+  }) => add(path, Method.options, handler, middlewares: middlewares);
+
+  Lunart trace(
+    String path,
+    Handler handler, {
+    List<Middleware> middlewares = const [],
+  }) => add(path, Method.trace, handler, middlewares: middlewares);
 
   Lunart patch(
     String path,
@@ -87,12 +117,6 @@ class Lunart {
 
     return this;
   }
-
-  Lunart delete(
-    String path,
-    Handler handler, {
-    List<Middleware> middlewares = const [],
-  }) => add(path, Method.delete, handler, middlewares: middlewares);
 
   Future<Lunart> serve({
     int port = 8000,

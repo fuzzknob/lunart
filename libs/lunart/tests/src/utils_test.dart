@@ -83,6 +83,24 @@ void main() {
     });
   });
 
+  group('trimSlashes', () {
+    test('removes leading and trailing slashes', () {
+      expect(trimSlashes('/users/'), 'users');
+    });
+
+    test('keeps internal slashes intact', () {
+      expect(trimSlashes('/api/v1/users/'), 'api/v1/users');
+    });
+
+    test('returns empty string for empty input', () {
+      expect(trimSlashes(''), '');
+    });
+
+    test('returns same string when no boundary slashes exist', () {
+      expect(trimSlashes('users'), 'users');
+    });
+  });
+
   group('invokeHandler', () {
     test('calls handler directly when middleware list is empty', () async {
       final request = _buildRequest();

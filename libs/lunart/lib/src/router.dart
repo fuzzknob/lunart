@@ -8,7 +8,7 @@ import 'utils.dart';
 
 class Router implements RequestHandler {
   Router({String prefix = '', List<Middleware> middlewares = const []}) {
-    this.prefix = _trimSlashes(prefix);
+    this.prefix = trimSlashes(prefix);
     _globalMiddlewares = middlewares;
   }
 
@@ -132,16 +132,14 @@ class Router implements RequestHandler {
   }
 
   String _buildPath(String path) {
-    if (prefix.isEmpty) return '/${_trimSlashes(path)}';
+    if (prefix.isEmpty) return '/${trimSlashes(path)}';
 
     if (path == '/') return '/$prefix';
 
-    return '/$prefix/${_trimSlashes(path)}';
+    return '/$prefix/${trimSlashes(path)}';
   }
 
   String _createRouteMapKey(String path, Method method) => '$method@$path';
-
-  String _trimSlashes(String path) => path.replaceAll(RegExp(r'^/+|/+$'), '');
 }
 
 class RouteHandler {
@@ -171,6 +169,8 @@ class RouteHandler {
   }
 
   Future invoke(Request request) async {
+    request.routerPath = path;
+
     return invokeHandler(
       request: request,
       middlewares: middlewares,

@@ -42,3 +42,7 @@ Future<String?> getMimeType(File file) async {
 
   return lookupMimeType(file.path, headerBytes: bytes);
 }
+
+String trimSlashes(String input) {
+  return input.replaceAll(RegExp(r'^\/|\/$'), '');
+}

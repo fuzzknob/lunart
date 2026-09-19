@@ -274,4 +274,25 @@ void main() {
       );
     });
   });
+
+  group('generateWeakEtags', () {
+    test('returns expected weak ETag when fileStat is provided', () async {
+      final tempDir = await Directory.systemTemp.createTemp('lunart-etag-');
+      final file = File('${tempDir.path}/data.txt');
+      await file.writeAsString('etag-content');
+
+      try {
+        final fileStat = await file.stat();
+
+        final etag = await generateWeakEtags(file, fileStat);
+
+        final expected =
+            'W/"${fileStat.size.toRadixString(16)}-${fileStat.modified.millisecondsSinceEpoch.toRadixString(16)}"';
+
+        expect(etag, expected);
+      } finally {
+        await tempDir.delete(recursive: true);
+      }
+    });
+  });
 }

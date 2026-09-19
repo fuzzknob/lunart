@@ -22,6 +22,7 @@ class Request {
   final HttpRequest nativeRequest;
   final Map<String, String> headers;
   final Map<String, String> queries;
+  late final String routerPath;
   Map<String, dynamic> context = {};
   Map<String, dynamic> parameters = {};
   Future<String?> Function(String, {Duration? maxAge})? signedCookieParser;

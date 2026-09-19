@@ -46,3 +46,10 @@ Future<String?> getMimeType(File file) async {
 String trimSlashes(String input) {
   return input.replaceAll(RegExp(r'^\/|\/$'), '');
 }
+
+Future<String> generateWeakEtags(File file, [FileStat? fileStat]) async {
+  final stat = fileStat ?? await file.stat();
+
+  return 'W/"${stat.size.toRadixString(16)}-'
+      '${stat.modified.millisecondsSinceEpoch.toRadixString(16)}"';
+}

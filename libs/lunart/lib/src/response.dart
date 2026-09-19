@@ -206,4 +206,5 @@ class Response {
   }
 }
 
+// ignore: non_constant_identifier_names
 Response get Res => Response();

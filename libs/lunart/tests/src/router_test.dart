@@ -104,6 +104,70 @@ void main() {
       },
     );
 
+    test('all handler handles all methods', () async {
+      final router = Router();
+
+      router.all(
+        '/all',
+        (req) => req.method,
+      );
+
+      expect(
+        await router.handleRequest(
+          _buildRequest(path: '/all', method: Method.get),
+        ),
+        Method.get,
+      );
+      expect(
+        await router.handleRequest(
+          _buildRequest(path: '/all', method: Method.head),
+        ),
+        Method.head,
+      );
+      expect(
+        await router.handleRequest(
+          _buildRequest(path: '/all', method: Method.post),
+        ),
+        Method.post,
+      );
+      expect(
+        await router.handleRequest(
+          _buildRequest(path: '/all', method: Method.put),
+        ),
+        Method.put,
+      );
+      expect(
+        await router.handleRequest(
+          _buildRequest(path: '/all', method: Method.delete),
+        ),
+        Method.delete,
+      );
+      expect(
+        await router.handleRequest(
+          _buildRequest(path: '/all', method: Method.connect),
+        ),
+        Method.connect,
+      );
+      expect(
+        await router.handleRequest(
+          _buildRequest(path: '/all', method: Method.options),
+        ),
+        Method.options,
+      );
+      expect(
+        await router.handleRequest(
+          _buildRequest(path: '/all', method: Method.trace),
+        ),
+        Method.trace,
+      );
+      expect(
+        await router.handleRequest(
+          _buildRequest(path: '/all', method: Method.patch),
+        ),
+        Method.patch,
+      );
+    });
+
     test(
       'global middlewares run before route middlewares then handler',
       () async {
@@ -153,8 +217,8 @@ void main() {
 
   group('Router prefix, nest, merge, and group', () {
     test('constructor prefix is normalized for both prefixed and non-prefixed input', () async {
-      final routerA = Router(prefix: 'api')..get('/users', (_) => 'a');
-      final routerB = Router(prefix: '/api')..get('/users', (_) => 'b');
+      final routerA = Router(prefix: 'api').get('/users', (_) => 'a');
+      final routerB = Router(prefix: '/api').get('/users', (_) => 'b');
 
       final resultA = await routerA.handleRequest(
         _buildRequest(path: '/api/users', method: Method.get),
@@ -168,7 +232,7 @@ void main() {
     });
 
     test('root route with prefix is registered under /prefix', () async {
-      final router = Router(prefix: 'api')..get('/', (_) => 'root');
+      final router = Router(prefix: 'api').get('/', (_) => 'root');
 
       final result = await router.handleRequest(
         _buildRequest(path: '/api', method: Method.get),
@@ -178,7 +242,7 @@ void main() {
     });
 
     test('Router.nest creates prefixed router', () async {
-      final router = Router.nest('/v1')..get('/status', (_) => 'ok');
+      final router = Router.nest('/v1').get('/status', (_) => 'ok');
 
       final result = await router.handleRequest(
         _buildRequest(path: '/v1/status', method: Method.get),
@@ -189,8 +253,7 @@ void main() {
 
     test('merge applies parent prefix to merged child routes', () async {
       final parent = Router(prefix: 'v1');
-      final child = Router(prefix: 'admin')
-        ..get('/users', (_) => 'child-users');
+      final child = Router(prefix: 'admin').get('/users', (_) => 'child-users');
 
       parent.mount(child);
 
@@ -218,7 +281,7 @@ void main() {
 
   group('Router request matching and not found behavior', () {
     test('resolves dynamic path parameters into request.parameters', () async {
-      final router = Router()..get('/users/:id', (_) => 'ok');
+      final router = Router().get('/users/:id', (_) => 'ok');
       final request = _buildRequest(path: '/users/42', method: Method.get);
 
       final result = await router.handleRequest(request);
@@ -228,7 +291,7 @@ void main() {
     });
 
     test('matches dynamic route when path includes query string', () async {
-      final router = Router()..get('/users/:id', (_) => 'ok');
+      final router = Router().get('/users/:id', (_) => 'ok');
       final request = _buildRequest(
         path: '/users/42?expand=true',
         method: Method.get,
@@ -244,8 +307,8 @@ void main() {
       'prefers exact route over dynamic fallback for same path shape',
       () async {
         final router = Router()
-          ..get('/users/:id', (_) => 'dynamic')
-          ..get('/users/me', (_) => 'exact');
+            .get('/users/:id', (_) => 'dynamic')
+            .get('/users/me', (_) => 'exact');
 
         final result = await router.handleRequest(
           _buildRequest(path: '/users/me', method: Method.get),
@@ -256,7 +319,7 @@ void main() {
     );
 
     test('throws NotFoundException for unknown path', () async {
-      final router = Router()..get('/known', (_) => 'ok');
+      final router = Router().get('/known', (_) => 'ok');
 
       await expectLater(
         () => router.handleRequest(
@@ -269,7 +332,7 @@ void main() {
     test(
       'throws NotFoundException when method does not match exact route',
       () async {
-        final router = Router()..get('/users', (_) => 'ok');
+        final router = Router().get('/users', (_) => 'ok');
 
         await expectLater(
           () => router.handleRequest(
@@ -281,7 +344,7 @@ void main() {
     );
 
     test('throws NotFoundException when dynamic path matches but method is missing', () async {
-      final router = Router()..get('/users/:id', (_) => 'ok');
+      final router = Router().get('/users/:id', (_) => 'ok');
       final request = _buildRequest(path: '/users/88', method: Method.delete);
 
       await expectLater(
@@ -289,6 +352,16 @@ void main() {
         throwsA(isA<NotFoundException>()),
       );
       expect(request.parameters, {'id': '88'});
+    });
+
+    test('dynamic path works with all method', () async {
+      final router = Router().all('/users/:id', (_) => 'ok');
+      final request = _buildRequest(path: '/users/42', method: Method.get);
+
+      final result = await router.handleRequest(request);
+
+      expect(result, 'ok');
+      expect(request.parameters, {'id': '42'});
     });
   });
 }

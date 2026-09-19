@@ -9,13 +9,7 @@ Middleware cors({
   List<String> origins = const [],
   List<String> allowHeaders = const [],
   List<Method> allowMethods = const [
-    Method.options,
-    Method.get,
-    Method.head,
-    Method.post,
-    Method.put,
-    Method.patch,
-    Method.delete,
+    Method.all,
   ],
   List<String> exposeHeaders = const [],
   int? maxAge,
@@ -54,7 +48,17 @@ Middleware cors({
       headers['Access-Control-Max-Age'] = maxAge.toString();
     }
 
-    if (allowMethods.isNotEmpty) {
+    if (allowMethods.contains(Method.all)) {
+      headers['Access-Control-Allow-Methods'] = [
+        Method.options,
+        Method.get,
+        Method.head,
+        Method.post,
+        Method.put,
+        Method.patch,
+        Method.delete,
+      ].join(',');
+    } else if (allowMethods.isNotEmpty) {
       headers['Access-Control-Allow-Methods'] = allowMethods.join(',');
     }
 

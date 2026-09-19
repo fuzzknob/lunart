@@ -7,7 +7,8 @@ enum Method {
   connect,
   options,
   trace,
-  patch;
+  patch,
+  all;
 
   String get value {
     return switch (this) {
@@ -20,6 +21,7 @@ enum Method {
       (Method.options) => 'OPTIONS',
       (Method.trace) => 'TRACE',
       (Method.patch) => 'PATCH',
+      (Method.all) => 'ALL',
     };
   }
 

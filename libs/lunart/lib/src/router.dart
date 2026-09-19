@@ -111,6 +111,12 @@ class Router implements RequestHandler {
     List<Middleware> middlewares = const [],
   }) => add(path, Method.patch, handler, middlewares: middlewares);
 
+  Router all(
+    String path,
+    Handler handler, {
+    List<Middleware> middlewares = const [],
+  }) => add(path, Method.all, handler, middlewares: middlewares);
+
   Router mount(Router router) {
     for (final handler in router.routesMap.values) {
       final path = _buildPath(handler.path);
@@ -137,7 +143,7 @@ class Router implements RequestHandler {
     final path = request.path;
     final method = request.method;
 
-    var handler = routesMap[_createRouteMapKey(path, method)];
+    var handler = _getRouteHandler(path, method);
 
     if (handler != null) {
       return handler.invoke(request);
@@ -147,12 +153,18 @@ class Router implements RequestHandler {
 
     if (result != null) {
       request.parameters = result.parameters;
-      handler = routesMap[_createRouteMapKey(result.path, method)];
+      handler = _getRouteHandler(result.path, method);
 
       if (handler != null) return handler.invoke(request);
     }
 
     throw NotFoundException(message: "'$path' path not found");
+  }
+
+  RouteHandler? _getRouteHandler(String path, Method method) {
+    // Fallback to all if request for passed method not found
+    return routesMap[_createRouteMapKey(path, method)] ??
+        routesMap[_createRouteMapKey(path, Method.all)];
   }
 
   String _buildPath(String path) {

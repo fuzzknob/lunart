@@ -4,13 +4,14 @@ void main() {
   final app = Lunart().use(requestLogger);
 
   // Serves files from the public directory by default
-  app.get(
+  // Using all method so that the helper can handle both get and head requests
+  app.all(
     '*',
     serveStatic(),
   );
 
   // Serves files from the public-b directory
-  app.get(
+  app.all(
     'public-b',
     serveStatic(
       path: 'public-b',
@@ -18,7 +19,7 @@ void main() {
   );
 
   // Serve a specific JSON file from the jsons directory
-  app.get(
+  app.all(
     '/jsons/test.json',
     serveStatic(
       path: './jsons/test.json',

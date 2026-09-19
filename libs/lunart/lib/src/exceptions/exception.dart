@@ -5,4 +5,9 @@ class const LunartException({
   final Object? error,
   final Object? context,
   final StackTrace? stackTrace,
-}) implements Exception;
+}) implements Exception {
+  @override
+  String toString() {
+    return 'LunartException: $message';
+  }
+}

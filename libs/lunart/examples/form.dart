@@ -78,11 +78,5 @@ void main() {
     ''');
   });
 
-  app.post('/test-body', (req) async {
-    final body = await req.body();
-
-    return body;
-  });
-
   app.serve();
 }

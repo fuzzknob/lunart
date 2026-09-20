@@ -38,7 +38,6 @@ const formsHTMLTemplate = '''
 ''';
 
 void main() {
-  // final router = Router();
   final app = Lunart();
 
   app.get('/', (_) {
@@ -56,7 +55,7 @@ void main() {
 
   // parses multipart/form-data
   app.post('/post-multi-part', (req) async {
-    final body = await req.body();
+    final body = await req.body<Map<String, dynamic>?>();
 
     if (body == null) {
       return Res.badRequest().text('Bad request');
@@ -77,6 +76,12 @@ void main() {
     return Res.html('''
       <img src="data:${upload.mime};base64,$data" />
     ''');
+  });
+
+  app.post('/test-body', (req) async {
+    final body = await req.body();
+
+    return body;
   });
 
   app.serve();

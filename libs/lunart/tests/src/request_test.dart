@@ -87,6 +87,59 @@ Future<T> _withNativeRequest<T>({
 }
 
 void main() {
+  group('Request.bytes', () {
+    test('returns all raw chunks in order', () async {
+      final chunks = await _withNativeRequest<List<List<int>>>(
+        method: 'POST',
+        bodyBytes: convert.utf8.encode('hello world'),
+        onRequest: (nativeRequest) async {
+          final request = _buildRequest(nativeRequest);
+          final rawChunks = await request.bytes();
+
+          return rawChunks.map((chunk) => chunk.toList()).toList();
+        },
+      );
+
+      final flattened = chunks.expand((chunk) => chunk).toList();
+
+      expect(flattened, convert.utf8.encode('hello world'));
+      expect(chunks, isNotEmpty);
+    });
+
+    test('returns empty list when body is empty', () async {
+      final chunks = await _withNativeRequest<List<List<int>>>(
+        method: 'POST',
+        onRequest: (nativeRequest) async {
+          final request = _buildRequest(nativeRequest);
+          final rawChunks = await request.bytes();
+
+          return rawChunks.map((chunk) => chunk.toList()).toList();
+        },
+      );
+
+      expect(chunks, isEmpty);
+    });
+
+    test('preserves binary payload bytes', () async {
+      final payload = <int>[0, 255, 10, 42, 128, 64];
+
+      final chunks = await _withNativeRequest<List<List<int>>>(
+        method: 'POST',
+        bodyBytes: payload,
+        onRequest: (nativeRequest) async {
+          final request = _buildRequest(nativeRequest);
+          final rawChunks = await request.bytes();
+
+          return rawChunks.map((chunk) => chunk.toList()).toList();
+        },
+      );
+
+      final flattened = chunks.expand((chunk) => chunk).toList();
+
+      expect(flattened, payload);
+    });
+  });
+
   group('Request.body', () {
     test('returns null when content type is missing', () async {
       final body = await _withNativeRequest<Map<String, dynamic>?>(
@@ -189,6 +242,20 @@ void main() {
       expect(file.bytes, convert.utf8.encode('ABC'));
     });
 
+    test('parses text for text/plain', () async {
+      final body = await _withNativeRequest<String?>(
+        method: 'POST',
+        contentTypeHeader: 'text/plain',
+        bodyBytes: convert.utf8.encode('hello'),
+        onRequest: (nativeRequest) async {
+          final request = _buildRequest(nativeRequest);
+          return await request.body();
+        },
+      );
+
+      expect(body, 'hello');
+    });
+
     test(
       'returns null for multipart/form-data when boundary is missing',
       () async {
@@ -209,8 +276,8 @@ void main() {
     test('returns null for unsupported content type', () async {
       final body = await _withNativeRequest<Map<String, dynamic>?>(
         method: 'POST',
-        contentTypeHeader: 'text/plain',
-        bodyBytes: convert.utf8.encode('hello'),
+        contentTypeHeader: 'unsupported-body',
+        bodyBytes: null,
         onRequest: (nativeRequest) async {
           final request = _buildRequest(nativeRequest);
           return await request.body();

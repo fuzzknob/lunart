@@ -31,6 +31,9 @@ export 'src/helpers/serve_static.dart';
 export 'src/interfaces/plugin.dart';
 export 'src/interfaces/to_json.dart';
 
+export 'src/libs/size.dart';
+
+export 'src/middlewares/body_limit.dart';
 export 'src/middlewares/secure_headers.dart';
 export 'src/middlewares/error_handler.dart';
 export 'src/middlewares/cors.dart';

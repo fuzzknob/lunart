@@ -45,7 +45,8 @@ void main() {
             .connect('/c', (_) => 'connect')
             .options('/o', (_) => 'options')
             .trace('/t', (_) => 'trace')
-            .patch('/pa', (_) => 'patch');
+            .patch('/pa', (_) => 'patch')
+            .query('/q', (_) => 'query');
 
         expect(
           await router.handleRequest(
@@ -100,6 +101,12 @@ void main() {
             _buildRequest(path: '/pa', method: Method.patch),
           ),
           'patch',
+        );
+        expect(
+          await router.handleRequest(
+            _buildRequest(path: '/q', method: Method.query),
+          ),
+          'query',
         );
       },
     );

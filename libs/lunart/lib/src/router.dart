@@ -111,6 +111,12 @@ class Router implements RequestHandler {
     List<Middleware> middlewares = const [],
   }) => add(path, Method.patch, handler, middlewares: middlewares);
 
+  Router query(
+    String path,
+    Handler handler, {
+    List<Middleware> middlewares = const [],
+  }) => add(path, Method.query, handler, middlewares: middlewares);
+
   Router all(
     String path,
     Handler handler, {

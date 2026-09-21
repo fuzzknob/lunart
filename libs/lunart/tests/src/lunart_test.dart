@@ -220,5 +220,15 @@ void main() {
 
       expect(result, 'patch');
     });
+
+    test('query helper registers QUERY route', () async {
+      final app = Lunart(barebones: true).query('/q', (_) => 'query');
+
+      final result = await app.router.handleRequest(
+        _buildRequest(path: '/q', method: Method.query),
+      );
+
+      expect(result, 'query');
+    });
   });
 }

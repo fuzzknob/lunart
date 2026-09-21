@@ -108,6 +108,12 @@ class Lunart {
     List<Middleware> middlewares = const [],
   }) => add(path, Method.patch, handler, middlewares: middlewares);
 
+  Lunart query(
+    String path,
+    Handler handler, {
+    List<Middleware> middlewares = const [],
+  }) => add(path, Method.query, handler, middlewares: middlewares);
+
   Lunart all(
     String path,
     Handler handler, {

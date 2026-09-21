@@ -8,6 +8,7 @@ enum Method {
   options,
   trace,
   patch,
+  query,
   all;
 
   String get value {
@@ -21,6 +22,7 @@ enum Method {
       (Method.options) => 'OPTIONS',
       (Method.trace) => 'TRACE',
       (Method.patch) => 'PATCH',
+      (Method.query) => 'QUERY',
       (Method.all) => 'ALL',
     };
   }
@@ -41,6 +43,7 @@ enum Method {
       'OPTIONS' => Method.options,
       'TRACE' => Method.trace,
       'PATCH' => Method.patch,
+      'QUERY' => Method.query,
       _ => throw Exception('Unknown method => $method'),
     };
   }

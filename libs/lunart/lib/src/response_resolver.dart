@@ -61,16 +61,24 @@ class ResponseTypeResolver {
 
     if (response is File) return Res.file(response);
 
-    if (response is Stream) return Res.stream(response);
+    if (response is Stream) return _streamResolver(response);
 
     return Res.text(response.toString());
   }
-}
 
-Response _stringResolver(String response) {
-  if (isHtml(response)) {
-    return Res.html(response);
+  Response _streamResolver(Stream stream) {
+    if (stream is Stream<String>) {
+      return Res.streamText(stream);
+    }
+
+    return Res.stream(stream);
   }
 
-  return Res.text(response);
+  Response _stringResolver(String response) {
+    if (isHtml(response)) {
+      return Res.html(response);
+    }
+
+    return Res.text(response);
+  }
 }

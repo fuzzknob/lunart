@@ -133,6 +133,8 @@ class Server {
     //   return response.hijacker?.call(httpResponse, response);
     // }
 
+    httpResponse.bufferOutput = response.bufferResponse;
+
     if (response.body is Stream) {
       await httpResponse.addStream(
         getStreamedResponse(response.body as Stream),

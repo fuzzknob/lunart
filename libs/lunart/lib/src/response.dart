@@ -11,6 +11,7 @@ class Response {
   Map<String, Object> _headers = {};
   void Function(HttpResponse, Response)? _hijacker;
   List<LunartCookie> cookies = [];
+  bool bufferResponse = false;
 
   // Will be flagged to be converted by the response converter registry
   bool autoResolveResponseType = false;
@@ -165,6 +166,13 @@ class Response {
 
   Response stream(Stream stream) {
     _body = stream;
+
+    return this;
+  }
+
+  Response streamText(Stream<String> stream) {
+    _body = stream;
+    bufferResponse = false;
 
     return this;
   }

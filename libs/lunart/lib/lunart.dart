@@ -41,6 +41,7 @@ export 'src/middlewares/request_logger.dart';
 export 'src/middlewares/signed_cookie.dart';
 
 export 'src/plugins/base_plugin.dart';
+export 'src/plugins/static_plugin.dart';
 
 export 'dart:io' show SameSite, HttpStatus;
 export 'dart:async' show FutureOr;

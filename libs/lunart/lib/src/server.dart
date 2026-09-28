@@ -129,10 +129,6 @@ class Server {
       httpResponse.cookies.add(httpCookie);
     }
 
-    // if (response.hasHijacked) {
-    //   return response.hijacker?.call(httpResponse, response);
-    // }
-
     httpResponse.bufferOutput = response.bufferResponse;
 
     if (response.body is Stream) {

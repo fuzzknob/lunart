@@ -4,6 +4,7 @@ import 'dart:convert' as convert;
 
 import 'utils.dart';
 import 'cookie.dart';
+import 'helpers/sse_helper.dart';
 
 class Response {
   int _statusCode = HttpStatus.ok;
@@ -161,8 +162,21 @@ class Response {
     return this;
   }
 
-  // Response streamEvent(void Function(sse.SSEStream) cb) =>
-  // sse.streamEvent(cb, this);
+  Response sse(void Function(SSEHelper) cb) {
+    final sseHelper = SSEHelper();
+
+    header('content-type', 'text/event-stream; charset=utf-8');
+    header('cache-control', 'no-cache');
+    header('connection', 'keep-alive');
+    header('transfer-encoding', 'chunked');
+
+    cb(sseHelper);
+
+    stream(sseHelper.stream);
+    bufferResponse = false;
+
+    return this;
+  }
 
   Response stream(Stream stream) {
     _body = stream;

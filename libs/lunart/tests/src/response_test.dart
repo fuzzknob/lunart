@@ -148,6 +148,49 @@ void main() {
 
       expect(response.bufferResponse, isFalse);
     });
+
+    test('sse sets server-sent event headers', () {
+      final response = Response();
+
+      response.sse((_) {});
+
+      expect(
+        response.headers['content-type'],
+        'text/event-stream; charset=utf-8',
+      );
+      expect(response.headers['cache-control'], 'no-cache');
+      expect(response.headers['connection'], 'keep-alive');
+      expect(response.headers['transfer-encoding'], 'chunked');
+    });
+
+    test('sse disables buffering', () {
+      final response = Response()..bufferResponse = true;
+
+      response.sse((_) {});
+
+      expect(response.bufferResponse, isFalse);
+    });
+
+    test('sse sets body as a string stream', () {
+      final response = Response();
+
+      response.sse((_) {});
+
+      expect(response.body, isA<Stream<String>>());
+    });
+
+    test('sse body stream emits callback-sent event payload', () async {
+      final response = Response();
+
+      response.sse((sse) {
+        sse.sendText('hello');
+      });
+
+      final bodyStream = response.body as Stream<String>;
+      final payload = await bodyStream.first;
+
+      expect(payload, 'data: hello\n\n\n');
+    });
   });
 
   group('Response redirect and statuses', () {

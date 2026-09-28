@@ -27,7 +27,7 @@ export 'src/exceptions/unauthorized_exception.dart';
 export 'src/exceptions/unprocessable_entity_exception.dart';
 export 'src/exceptions/unsupported_media_type_exception.dart';
 
-export 'src/helpers/serve_static.dart';
+export 'src/helpers/sse_helper.dart';
 
 export 'src/interfaces/plugin.dart';
 export 'src/interfaces/to_json.dart';

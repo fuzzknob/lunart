@@ -223,6 +223,31 @@ void main() {
       expect(result.body, 'ABC');
     });
 
+    test(
+      'does not buffer output when lunart response bufferResponse is false',
+      () async {
+        final server = Server();
+
+        // streamText sets bufferResponse to false
+        final lunartResponse = Res.streamText(
+          Stream<String>.fromIterable(['A', 'B', 'C']),
+        );
+
+        late bool nativeBufferOutput;
+
+        final result = await _sendToIncomingHandler(
+          onRequest: (request) async {
+            await server.writeResponse(lunartResponse, request.response);
+            nativeBufferOutput = request.response.bufferOutput;
+          },
+        );
+
+        expect(nativeBufferOutput, isFalse);
+        expect(result.response.statusCode, HttpStatus.ok);
+        expect(result.body, 'ABC');
+      },
+    );
+
     test('writes cookies with configured attributes', () async {
       final server = Server();
       final expiresAt = DateTime.utc(2030, 1, 1);

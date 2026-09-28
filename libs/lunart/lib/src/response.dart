@@ -171,7 +171,6 @@ class Response {
   }
 
   Response streamText(Stream<String> stream) {
-    _body = stream;
     bufferResponse = false;
     header('content-type', 'text/plain; charset=utf-8');
     header('cache-control', 'no-cache');

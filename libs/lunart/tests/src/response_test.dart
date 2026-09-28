@@ -131,6 +131,23 @@ void main() {
 
       expect(identical(response.body, stream), isTrue);
     });
+
+    test('streamText sets correct headers for streaming text', () {
+      final stream = Stream<String>.fromIterable(['hello', 'world']);
+
+      final response = Res.streamText(stream);
+
+      expect(response.headers['content-type'], 'text/plain; charset=utf-8');
+      expect(response.headers['cache-control'], 'no-cache');
+    });
+
+    test('streamText disables buffering', () {
+      final stream = Stream<String>.fromIterable(['hello', 'world']);
+
+      final response = Res.streamText(stream);
+
+      expect(response.bufferResponse, isFalse);
+    });
   });
 
   group('Response redirect and statuses', () {

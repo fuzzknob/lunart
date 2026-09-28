@@ -1,4 +1,5 @@
 export 'src/lunart.dart';
+export 'src/server.dart';
 export 'src/cookie.dart';
 export 'src/request.dart';
 export 'src/response.dart';

@@ -131,6 +131,15 @@ class Server {
 
     httpResponse.bufferOutput = response.bufferResponse;
 
+    // Handover the response to [ResponseThieve] implementations
+    if (response.body is ResponseThief) {
+      final rt = response.body as ResponseThief;
+
+      await rt.writeResponse(httpResponse, response);
+
+      return;
+    }
+
     if (response.body is Stream) {
       await httpResponse.addStream(
         getStreamedResponse(response.body as Stream),

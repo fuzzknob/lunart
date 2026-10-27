@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'interfaces/response_thief.dart';
 import 'enums/method.dart';
 import 'interfaces/request_handler.dart';
 import 'exceptions/exception.dart';

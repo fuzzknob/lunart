@@ -71,13 +71,7 @@ class Server {
 
       await writeResponse(lunartResponse, httpRequest.response);
     } catch (e, stackTrace) {
-      print(e);
-      print(stackTrace);
-
-      writeResponse(
-        Res.status(500).text('Internal Server Error'),
-        httpRequest.response,
-      );
+      _handleServerError(e, stackTrace, httpRequest.response);
     }
   }
 
@@ -149,6 +143,24 @@ class Server {
       httpResponse.write(response.body);
     }
 
-    return httpResponse.close();
+    await httpResponse.close();
+  }
+
+  void _handleServerError(
+    Object? e,
+    StackTrace trace,
+    HttpResponse httpResponse,
+  ) async {
+    try {
+      print(e);
+      print(trace);
+
+      await writeResponse(
+        Res.status(500).text('Internal Server Error'),
+        httpResponse,
+      );
+    } catch (e) {
+      await httpResponse.close();
+    }
   }
 }

@@ -1,9 +1,0 @@
-import drtx;
-
-Drtx Home() {
-    return html {
-        body {
-
-        }
-    };
-}

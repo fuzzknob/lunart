@@ -1,0 +1,16 @@
+import drtx;
+
+Dartx Home() {
+    val message = 'This is the message to the world';
+    var isVisible = state(false)
+
+    return html {
+        body(id: 'hello' class: 'Name') {
+            if isVisible {
+                <h1>{message}</h2>
+            } else {
+                //
+            }
+        }
+    }
+}

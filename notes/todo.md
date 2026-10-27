@@ -31,31 +31,49 @@
       [x] Write implementation
       [x] Write Tests
 - [ ] Implement websockets
-      [ ] Research
-      [ ] Write implementation
-      [ ] Write Tests
+      [x] Research
+      [x] Write implementation
+      [x] On close clean up listeners
+      [x] Memory footprint
+      [x] TODO: add global for this error catcher
+      [x] Implement other ws methods
+      [x] Implement other websocket options
+      [x] Actually Write the Tests
 - [ ] Caching?
 - [ ] Compression? https://hono.dev/docs/middleware/builtin/compress
 - [ ] Request timeout
 - [ ] jwt
 - [ ] csrf
 - [ ] Rate limiting?
+- [ ] Revamp body limit middleware. Don't just rely on content-length
 - [ ] Remove native request dependency + Revamp Request
+      Note: Make it easily testable
+      [ ] fromIORequest()
+      [ ] Use Size
 - [ ] Revamp Response
-- [ ] Server timing https://hono.dev/docs/middleware/builtin/timing?
+      [ ] Memory leaks (specially in streams, sse and websocket)
 - [ ] Context storage (req.getContext<Context>()) https://hono.dev/docs/middleware/builtin/context-storage
+- [ ] Server timing https://hono.dev/docs/middleware/builtin/timing?
 - [ ] Implement more advanced logger
 - [ ] Revamp error handler middleware
-- [ ] Comment documentations
-- [ ] Templating support?
 - [ ] Multithreading support
 - [ ] SSL support
-- [ ] Benchmarks + Optimizations
+- [ ] Benchmarks + Optimizations + Fuzz testing
+- [ ] Support for RFC 9457 type https://datatracker.ietf.org/doc/html/rfc9457
+- [ ] Comment documentations
+- [ ] Templating support?
+- [ ] Hot reload?
+- [ ] Env parser?
+- [ ] Implement router.on([.post, .get], (req) {})
+- [ ] Think about if Agents are necessary for this project
+- [ ] Rewrite the test code
+- [ ] Write integration tests including websocket
 
 ## Lunart Future
 
 - [ ] RPC
 - [ ] Open API?
+- [ ] Implement backpressure in websocket
 - [ ] uWebsocket support
 
 # Artiform

@@ -42,6 +42,7 @@ export 'src/middlewares/error_handler.dart';
 export 'src/middlewares/cors.dart';
 export 'src/middlewares/request_logger.dart';
 export 'src/middlewares/signed_cookie.dart';
+export 'src/middlewares/timeout.dart';
 
 export 'src/plugins/base_plugin.dart';
 export 'src/plugins/static_plugin.dart';

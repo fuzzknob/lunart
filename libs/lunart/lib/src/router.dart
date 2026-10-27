@@ -2,6 +2,7 @@ import 'libs/path_trie.dart';
 import 'enums/method.dart';
 import 'interfaces/request_handler.dart';
 import 'exceptions/not_found_exception.dart';
+import 'websocket.dart';
 import 'request.dart';
 import 'types.dart';
 import 'utils.dart';
@@ -140,6 +141,20 @@ class Router implements RequestHandler {
       );
       pathTrie.addPath(path);
     }
+
+    return this;
+  }
+
+  Router ws(
+    String path,
+    WebSocketHandler handler, {
+    List<Middleware> middlewares = const [],
+    Duration? pingInterval,
+  }) {
+    final wsHelper = WebSocketRequestHandler(pingInterval: pingInterval);
+    final httpHandler = wsHelper.handleWebsocket(handler);
+
+    get(path, httpHandler, middlewares: middlewares);
 
     return this;
   }

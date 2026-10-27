@@ -130,6 +130,22 @@ class Lunart {
     return this;
   }
 
+  Lunart ws(
+    String path,
+    WebSocketHandler handler, {
+    List<Middleware> middlewares = const [],
+    Duration? pingInterval,
+  }) {
+    router.ws(
+      path,
+      handler,
+      middlewares: middlewares,
+      pingInterval: pingInterval,
+    );
+
+    return this;
+  }
+
   Future<Lunart> serve({
     int port = 8000,
     String host = '0.0.0.0',

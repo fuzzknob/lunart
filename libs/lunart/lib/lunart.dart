@@ -7,6 +7,7 @@ export 'src/response_resolver.dart';
 export 'src/router.dart';
 export 'src/types.dart';
 export 'src/utils.dart';
+export 'src/websocket.dart';
 
 export 'src/enums/method.dart';
 

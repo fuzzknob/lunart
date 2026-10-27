@@ -31,6 +31,7 @@ export 'src/helpers/sse_helper.dart';
 
 export 'src/interfaces/plugin.dart';
 export 'src/interfaces/to_json.dart';
+export 'src/interfaces/response_thief.dart';
 
 export 'src/libs/size.dart';
 

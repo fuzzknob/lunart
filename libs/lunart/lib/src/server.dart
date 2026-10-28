@@ -126,7 +126,7 @@ class Server {
 
     httpResponse.bufferOutput = response.bufferResponse;
 
-    // Handover the response to [ResponseThieve] implementations
+    // Handover the response to [ResponseThief] implementations
     if (response.body is ResponseThief) {
       final rt = response.body as ResponseThief;
 

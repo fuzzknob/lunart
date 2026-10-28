@@ -10,7 +10,16 @@ Middleware timeout({
 }) {
   return (Request req, Next next) async {
     try {
-      return await Future(next).timeout(duration);
+      return await Future(() async {
+        // Waits for the request to be read completely,
+        // if the request takes longer than the duration time it will trigger timeout exception
+        // This needs to be here because if the handler or any middlewares don't call this function
+        // and say the client is slow to send request chunks it will indefinitely wait for the client and never complete the response
+        // It's Kind of hacky but it works
+        await req.body();
+
+        return await next();
+      }).timeout(duration);
     } on TimeoutException {
       if (handleTimeout != null) {
         return handleTimeout;

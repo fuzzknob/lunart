@@ -74,8 +74,8 @@ void main() {
     final data = base64Encode(upload.bytes);
 
     return Res.html('''
-      <img src="data:${upload.mime};base64,$data" />
-    ''');
+        <img src="data:${upload.mime};base64,$data" />
+      ''');
   });
 
   app.serve();

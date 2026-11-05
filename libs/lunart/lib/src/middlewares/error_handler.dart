@@ -32,7 +32,7 @@ Future errorHandler(Request request, Next next, {bool logError = true}) async {
 }
 
 Response _buildErrorResponse(LunartException exception, Request request) {
-  final acceptHeaders = request.headers['accept'] ?? '';
+  final acceptHeaders = request.header('Accept') ?? '';
   final message =
       exception.message ?? 'There was an ${exception.statusCode} error!';
   final response = Res.status(exception.statusCode);

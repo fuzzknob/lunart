@@ -12,7 +12,7 @@ void main() {
   });
 
   app.get('/get-cookie', (req) async {
-    final cookie = await req.getSignedCookie('signed-cookie');
+    final cookie = await req.signedCookie('signed-cookie');
 
     print(cookie);
 
@@ -21,7 +21,7 @@ void main() {
 
   app.get('/get-cookie-with-max-age', (req) async {
     // if the cookie age has expired it returns null
-    final cookie = await req.getSignedCookie(
+    final cookie = await req.signedCookie(
       'signed-cookie',
       maxAge: Duration(days: 30),
     );

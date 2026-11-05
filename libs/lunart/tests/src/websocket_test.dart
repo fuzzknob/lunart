@@ -1,17 +1,7 @@
-import 'dart:io';
-
 import 'package:lunart/lunart.dart';
-import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
-// import 'package:lunart/src/response.dart';
-// import 'package:lunart/src/enums/method.dart';
-// import 'package:lunart/src/request.dart';
-// import 'package:lunart/src/exceptions/bad_request_exception.dart';
-//
-// import 'package:lunart/src/websocket.dart';
-
-class _MockHttpRequest extends Mock implements HttpRequest {}
+import '../test_utils.dart';
 
 void main() {
   group('WebSocketListener', () {
@@ -173,16 +163,16 @@ void main() {
       final handler = wsHandler.handleWebsocket((_) {});
 
       var response = await handler(
-        Request(
+        buildRequest(
           headers: {
             'connection': 'upgrade',
             'upgrade': 'websocket',
             'sec-websocket-key': 'dGhlIHNhbXBsZSBub25jZQ==',
             'sec-websocket-version': '13',
           },
+
           path: 'ws',
-          method: Method.get,
-          nativeRequest: _MockHttpRequest(),
+          method: .get,
           queries: {},
         ),
       );
@@ -209,15 +199,14 @@ void main() {
       final wsHandler = WebSocketRequestHandler();
       final handler = wsHandler.handleWebsocket((_) {});
 
-      final badRequest = Request(
+      final badRequest = buildRequest(
         headers: {
           'upgrade': 'websocket',
           'sec-websocket-key': 'dGhlIHNhbXBsZSBub25jZQ==',
           'sec-websocket-version': '13',
         },
         path: 'ws',
-        method: Method.get,
-        nativeRequest: _MockHttpRequest(),
+        method: .get,
         queries: {},
       );
 
@@ -233,15 +222,14 @@ void main() {
         final wsHandler = WebSocketRequestHandler();
         final handler = wsHandler.handleWebsocket((_) {});
 
-        final badRequest = Request(
+        final badRequest = buildRequest(
           headers: {
             'connection': 'upgrade',
             'sec-websocket-key': 'dGhlIHNhbXBsZSBub25jZQ==',
             'sec-websocket-version': '13',
           },
           path: 'ws',
-          method: Method.get,
-          nativeRequest: _MockHttpRequest(),
+          method: .get,
           queries: {},
         );
 
@@ -256,15 +244,14 @@ void main() {
       final wsHandler = WebSocketRequestHandler();
       final handler = wsHandler.handleWebsocket((_) {});
 
-      final badRequest = Request(
+      final badRequest = buildRequest(
         headers: {
           'connection': 'upgrade',
           'upgrade': 'websocket',
           'sec-websocket-key': 'dGhlIHNhbXBsZSBub25jZQ==',
         },
         path: 'ws',
-        method: Method.get,
-        nativeRequest: _MockHttpRequest(),
+        method: .get,
         queries: {},
       );
 
@@ -278,15 +265,14 @@ void main() {
       final wsHandler = WebSocketRequestHandler();
       final handler = wsHandler.handleWebsocket((_) {});
 
-      final badRequest = Request(
+      final badRequest = buildRequest(
         headers: {
           'connection': 'upgrade',
           'upgrade': 'websocket',
           'sec-websocket-version': '13',
         },
         path: 'ws',
-        method: Method.get,
-        nativeRequest: _MockHttpRequest(),
+        method: .get,
         queries: {},
       );
 
@@ -302,7 +288,7 @@ void main() {
       final handler = wsHandler.handleWebsocket((_) {});
 
       var response = await handler(
-        Request(
+        buildRequest(
           headers: {
             'connection': 'upgrade',
             'upgrade': 'websocket',
@@ -310,8 +296,7 @@ void main() {
             'sec-websocket-version': '99',
           },
           path: 'ws',
-          method: Method.get,
-          nativeRequest: _MockHttpRequest(),
+          method: .get,
           queries: {},
         ),
       );

@@ -25,7 +25,7 @@ Middleware cors({
     if (exposeHeaders.isNotEmpty) {
       headers['Access-Control-Expose-Headers'] = exposeHeaders.join(',');
     }
-    final requestOrigin = request.headers['origin'] ?? '';
+    final requestOrigin = request.header('origin') ?? '';
 
     if (origins.isEmpty) {
       headers['Access-Control-Allow-Origin'] = '*';
@@ -65,7 +65,7 @@ Middleware cors({
     if (allowHeaders.isNotEmpty) {
       headers['Access-Control-Allow-Headers'] = allowHeaders.join(',');
     } else {
-      final requestHeaders = request.headers['access-control-request-headers'];
+      final requestHeaders = request.header('access-control-request-headers');
 
       if (requestHeaders != null && requestHeaders.isNotEmpty) {
         headers['Access-Control-Allow-Headers'] = requestHeaders;

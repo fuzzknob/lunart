@@ -8,6 +8,7 @@ import 'exceptions/exception.dart';
 import 'response_resolver.dart';
 import 'types.dart';
 import 'request.dart';
+import 'cookie.dart';
 import 'response.dart';
 import 'utils.dart';
 
@@ -46,15 +47,33 @@ class Server {
     final headers = <String, String>{};
 
     httpRequest.headers.forEach((name, values) {
-      headers[name] = values.join(', ');
+      headers[name.toLowerCase()] = values.join(', ');
     });
+
+    final cookies = <String, LunartCookie>{};
+
+    for (final cookie in httpRequest.cookies) {
+      cookies[cookie.name.toLowerCase()] = LunartCookie.fromIOCoookie(cookie);
+    }
 
     return Request(
       headers: headers,
       method: Method.fromString(httpRequest.method),
-      nativeRequest: httpRequest,
       path: httpRequest.uri.path,
       queries: httpRequest.uri.queryParameters,
+      contentType: httpRequest.headers.contentType,
+      certificate: httpRequest.certificate,
+      connectionInfo: httpRequest.connectionInfo,
+      cookies: cookies,
+      getRawBody: () async {
+        final builder = BytesBuilder(copy: false);
+
+        await for (final byte in httpRequest) {
+          builder.add(byte);
+        }
+
+        return builder.toBytes();
+      },
     );
   }
 

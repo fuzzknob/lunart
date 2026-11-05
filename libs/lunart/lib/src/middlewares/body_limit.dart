@@ -7,7 +7,7 @@ Middleware bodyLimit({Size? maxBytes}) {
   return (Request req, Next next) async {
     final maxRequestSize = maxBytes ?? Size.fromMegabytes(50);
 
-    final contentLength = req.headers['content-length'];
+    final contentLength = req.header('Content-Length');
 
     if (contentLength != null &&
         int.parse(contentLength) > maxRequestSize.bytes) {

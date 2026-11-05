@@ -16,7 +16,7 @@ Middleware timeout({
         // This needs to be here because if the handler or any middlewares don't call this function
         // and say the client is slow to send request chunks it will indefinitely wait for the client and never complete the response
         // It's Kind of hacky but it works
-        await req.body();
+        await req.rawBody();
 
         return await next();
       }).timeout(duration);

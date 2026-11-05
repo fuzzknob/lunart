@@ -173,7 +173,7 @@ class Router implements RequestHandler {
     final result = pathTrie.lookupPath(path);
 
     if (result != null) {
-      request.parameters = result.parameters;
+      request.setParams(result.parameters);
       handler = _getRouteHandler(result.path, method);
 
       if (handler != null) return handler.invoke(request);

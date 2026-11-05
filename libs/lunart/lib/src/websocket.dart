@@ -226,20 +226,20 @@ class WebSocketRequestHandler {
 
   Handler handleWebsocket(void Function(WebSocketListener) wsHandler) {
     return (req) {
-      final connectionHeader = req.headers['connection'];
+      final connectionHeader = req.header('Connection');
 
       if (connectionHeader == null ||
           connectionHeader.toLowerCase() != 'upgrade') {
         throw NotFoundException();
       }
 
-      final upgradeHeader = req.headers['upgrade'];
+      final upgradeHeader = req.header('Upgrade');
 
       if (upgradeHeader == null || upgradeHeader != 'websocket') {
         throw BadRequestException();
       }
 
-      final versionHeader = req.headers['sec-websocket-version'];
+      final versionHeader = req.header('Sec-Websocket-Version');
 
       if (versionHeader == null) throw BadRequestException();
 
@@ -247,7 +247,7 @@ class WebSocketRequestHandler {
         return Res.status(426).header('Sec-WebSocket-Version', '13');
       }
 
-      final key = req.headers['sec-websocket-key'];
+      final key = req.header('Sec-Websocket-Key');
 
       if (key == null) return throw BadRequestException();
 

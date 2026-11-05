@@ -14,7 +14,8 @@ void main() {
   });
 
   app.get('/posts/:id', (req) {
-    final id = int.tryParse(req.parameters['id']);
+    final id = int.tryParse(req.param('id')!);
+
     if (id == null) {
       return Res.badRequest().message('Invalid id');
     }
@@ -45,7 +46,7 @@ void main() {
   });
 
   app.patch('/posts/:id', (req) async {
-    final id = int.tryParse(req.parameters['id']);
+    final id = int.tryParse(req.param('id')!);
     final data = await req.body();
 
     if (id == null) {
@@ -71,7 +72,7 @@ void main() {
   });
 
   app.delete('/posts/:id', (req) async {
-    final id = int.tryParse(req.parameters['id']);
+    final id = int.tryParse(req.param('id')!);
 
     if (id == null) {
       return Res.badRequest().message('Invalid id');

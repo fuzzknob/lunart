@@ -38,4 +38,18 @@ class LunartCookie {
   bool signed;
 
   bool hasSigned = false;
+
+  factory fromIOCoookie(Cookie cookie) {
+    return LunartCookie(
+      name: cookie.name,
+      value: cookie.value,
+      domain: cookie.domain,
+      expires: cookie.expires,
+      httpOnly: cookie.httpOnly,
+      maxAge: cookie.maxAge != null ? Duration(seconds: cookie.maxAge!) : null,
+      path: cookie.path,
+      sameSite: cookie.sameSite,
+      secure: cookie.secure,
+    );
+  }
 }

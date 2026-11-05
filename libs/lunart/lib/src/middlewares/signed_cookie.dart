@@ -7,7 +7,7 @@ Middleware signedCookie({required String secret}) {
   final sealer = CookieSealer(secret);
 
   return (Request request, Next next) async {
-    request.signedCookieParser = sealer.unseal;
+    request.setSignedCookieParser(sealer.unseal);
 
     final response = Res.any(await next());
 

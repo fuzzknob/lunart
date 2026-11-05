@@ -7,7 +7,7 @@ Router userRouter() {
   router.get('/', (_) => 'Hello from /users');
 
   // the full path will be /users/:id
-  router.get('/:id', (req) => 'Hello from /users/${req.parameters['id']}');
+  router.get('/:id', (req) => 'Hello from /users/${req.param('id')}');
 
   // the full path will be /users/update
   router.patch('/update', (_) => 'Hello from /users/update');
@@ -21,7 +21,7 @@ Router postRouter() {
 
   router.get('/', (_) => 'Hello from /posts');
 
-  router.get('/:id', (req) => 'Hello from /posts/${req.parameters['id']}');
+  router.get('/:id', (req) => 'Hello from /posts/${req.param('id')}');
 
   router.patch('/update', (_) => 'Hello from /posts/update');
 

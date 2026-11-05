@@ -127,7 +127,7 @@ class StaticPlugin implements Plugin {
     if (etags) {
       final fileEtag = await generateWeakEtags(targetFile, fileStat);
 
-      if (_isClientCacheValid(req.headers, fileEtag, fileStat)) {
+      if (_isClientCacheValid(req, fileEtag, fileStat)) {
         return response.status(304);
       }
 
@@ -145,7 +145,7 @@ class StaticPlugin implements Plugin {
         )
         .header('last-modified', HttpDate.format(fileStat.modified.toUtc()));
 
-    final rangeHeader = req.headers['range'];
+    final rangeHeader = req.header('Range');
     final isHeadOrOptionRequest =
         req.method == Method.head || req.method == Method.options;
 
@@ -279,17 +279,17 @@ class StaticPlugin implements Plugin {
   }
 
   bool _isClientCacheValid(
-    Map<String, String> headers,
+    Request req,
     String fileEtag,
     FileStat fileStat,
   ) {
-    final cacheControl = headers['cache-control'] ?? '';
+    final cacheControl = req.header('Cache-Control') ?? '';
 
     if (RegExp(r'no-cache|no-store').hasMatch(cacheControl)) {
       return false;
     }
 
-    final ifNoneMatch = headers['if-none-match'];
+    final ifNoneMatch = req.header('If-None-Match');
 
     if (ifNoneMatch != null) {
       if (ifNoneMatch == '*') {
@@ -305,7 +305,7 @@ class StaticPlugin implements Plugin {
       return false;
     }
 
-    final ifModifiedSince = headers['if-modified-since'];
+    final ifModifiedSince = req.header('If-Modified-Since');
 
     if (ifModifiedSince != null) {
       try {

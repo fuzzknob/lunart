@@ -16,7 +16,7 @@ void main() {
   });
 
   app.get('/posts/:id', (req) {
-    final id = req.parameters['id'];
+    final id = req.param('id');
 
     return id;
   });

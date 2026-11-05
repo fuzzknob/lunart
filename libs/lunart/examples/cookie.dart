@@ -8,7 +8,7 @@ void main() {
   });
 
   app.get('/get-cookie', (req) {
-    final rememberMe = req.getCookie('remember-me');
+    final rememberMe = req.cookie('remember-me');
 
     return rememberMe;
   });

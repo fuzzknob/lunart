@@ -12,7 +12,7 @@ void main() {
       })
       .get('/posts/:id', (req) async {
         // get request parameters from parameters map
-        final id = req.parameters['id'];
+        final id = req.param('id');
 
         return {
           'posts': 'Your post has the id: $id',
@@ -20,7 +20,7 @@ void main() {
       })
       .get('/posts/search', (req) {
         // get queries from the queries map
-        final query = req.queries['q'];
+        final query = req.query('q');
 
         // Sends json object with message field
         return Res.message('Searching for: $query');

@@ -2,75 +2,168 @@ import 'dart:io';
 import 'dart:convert' as convert;
 import 'dart:typed_data';
 
-import 'package:collection/collection.dart';
 import 'package:mime/mime.dart';
 
-import 'enums/method.dart';
 import 'exceptions/exception.dart';
 import 'exceptions/bad_request_exception.dart';
+import 'enums/method.dart';
+import 'cookie.dart';
 
 class Request {
   Request({
-    required this.nativeRequest,
     required this.path,
     required this.method,
-    required this.headers,
-    required this.queries,
+    required this._headers,
+    required this._queries,
+    required this._cookies,
+    required this._getRawBody,
+    this._contentType,
+    this.connectionInfo,
+    this.certificate,
   });
 
   final String path;
   final Method method;
-  final HttpRequest nativeRequest;
-  final Map<String, String> headers;
-  final Map<String, String> queries;
+  final HttpConnectionInfo? connectionInfo;
+  final X509Certificate? certificate;
+
   late final String routerPath;
-  Map<String, dynamic> context = {};
-  Map<String, dynamic> parameters = {};
-  Future<String?> Function(String, {Duration? maxAge})? signedCookieParser;
+
+  final Map<String, String> _headers;
+  final Map<String, LunartCookie> _cookies;
+  final Map<String, String> _queries;
+  final Future<Uint8List> Function() _getRawBody;
+  final ContentType? _contentType;
+
+  Map<String, String> _parameters = {};
+  final Map<Object?, dynamic> _context = {};
+
+  Future<String?> Function(String, {Duration? maxAge})? _signedCookieParser;
+
+  Uint8List? _bodyBytes;
   Object? _parsedBody;
 
-  List<Cookie> get cookies => nativeRequest.cookies;
+  bool get secure {
+    if (certificate != null) {
+      return true;
+    }
 
-  String? getCookie(String name) {
-    final cookie = cookies.firstWhereOrNull((cookie) => cookie.name == name);
-    if (cookie == null) return null;
-    if (cookie.expires != null &&
-        cookie.expires!.millisecondsSinceEpoch <
+    return header('x-forwarded-proto')?.toLowerCase() == 'https';
+  }
+
+  String? header(String name) {
+    return _headers[name.toLowerCase()];
+  }
+
+  Map<String, String> allHeaders() {
+    return _headers;
+  }
+
+  String? cookie(String name) {
+    final lunartCookie = _cookies[name.toLowerCase()];
+
+    if (lunartCookie == null) return null;
+    if (lunartCookie.expires != null &&
+        lunartCookie.expires!.millisecondsSinceEpoch <
             DateTime.now().millisecondsSinceEpoch) {
       return null;
     }
-    return cookie.value;
+
+    return lunartCookie.value;
   }
 
-  Future<String?> getSignedCookie(String name, {Duration? maxAge}) async {
-    if (signedCookieParser == null) {
+  Future<String?> signedCookie(String name, {Duration? maxAge}) async {
+    if (_signedCookieParser == null) {
       throw LunartException(
         message: 'Signed cookie parser not set. Have you added `signedCookie` middleware?',
       );
     }
-    final cookie = getCookie(name);
+    final cookie = this.cookie(name);
 
     if (cookie == null) return null;
 
-    final value = await signedCookieParser!(cookie, maxAge: maxAge);
+    final value = await _signedCookieParser!(cookie, maxAge: maxAge);
 
     if (value == null) return null;
 
     return Uri.decodeQueryComponent(value);
   }
 
-  /// # Get raw body bytes
-  /// ```dart
-  /// final data = await req.bytes();
-  /// ```
-  Future<List<Uint8List>> bytes() async {
-    final chunks = <Uint8List>[];
+  Map<String, String> allCookies() {
+    final cookieMap = <String, String>{};
 
-    await for (final chunk in nativeRequest) {
-      chunks.add(chunk);
+    for (final cookie in _cookies.values) {
+      cookieMap[cookie.name] = cookie.value;
     }
 
-    return chunks;
+    return cookieMap;
+  }
+
+  LunartCookie? lunartCookie(String name) {
+    return _cookies[name];
+  }
+
+  Map<String, LunartCookie> allLunartCookies() {
+    return _cookies;
+  }
+
+  void setSignedCookieParser(
+    Future<String?> Function(String, {Duration? maxAge})? parser,
+  ) {
+    _signedCookieParser = parser;
+  }
+
+  String? query(String name) {
+    return _queries[name];
+  }
+
+  Map<String, String> allQueries() {
+    return _queries;
+  }
+
+  String? param(String name) {
+    return _parameters[name];
+  }
+
+  Map<String, dynamic> allParams() {
+    return _parameters;
+  }
+
+  void setParams(Map<String, String> parameters) {
+    _parameters = parameters;
+  }
+
+  T context<T>([String? name]) {
+    if (name != null) {
+      return _context[name];
+    }
+
+    return _context[T];
+  }
+
+  void setContext<T>(
+    Object? nameOrValue, [
+    Object? value = 'LUNART-CONTEXT-DEFAULT-VALUE', // So that null value can be set for context
+  ]) {
+    if (value != 'LUNART-CONTEXT-DEFAULT-VALUE') {
+      _context[nameOrValue] = value;
+
+      return;
+    }
+
+    _context[T] = nameOrValue;
+  }
+
+  /// # Get raw body bytes
+  /// ```dart
+  /// final data = await req.rawBody();
+  /// ```
+  Future<Uint8List> rawBody() async {
+    if (_bodyBytes != null) return _bodyBytes!;
+
+    _bodyBytes = await _getRawBody();
+
+    return _bodyBytes!;
   }
 
   /// # Parses body according to the content-type
@@ -87,27 +180,46 @@ class Request {
 
   Future<Object?> _parseMappableBody() async {
     try {
-      final contentType = nativeRequest.headers.contentType;
-      if (contentType == null) return null;
+      var contentType = _contentType;
 
-      if (contentType.mimeType == 'application/json') {
-        final rawBody = await convert.utf8.decodeStream(nativeRequest);
+      if (contentType == null) {
+        final rawContentType = header('content-type');
+
+        if (rawContentType == null) {
+          return null;
+        }
+
+        contentType = ContentType.parse(rawContentType);
+      }
+
+      final mimeType = contentType.mimeType;
+      final bodyBytes = await rawBody();
+
+      if (bodyBytes.isEmpty) return null;
+
+      if (mimeType == 'application/json') {
+        final rawBody = convert.utf8.decode(bodyBytes);
+
         return convert.json.decode(rawBody);
       }
 
-      if (contentType.mimeType == 'application/x-www-form-urlencoded') {
-        final rawBody = await convert.utf8.decodeStream(nativeRequest);
+      if (mimeType == 'application/x-www-form-urlencoded') {
+        final rawBody = convert.utf8.decode(bodyBytes);
+
         return _parseUrlEncodedForm(rawBody);
       }
 
-      if (contentType.mimeType == 'multipart/form-data') {
-        return await _parseMultiPartForm(nativeRequest);
+      if (mimeType == 'multipart/form-data') {
+        return await _parseMultiPartForm(bodyBytes, contentType);
       }
 
-      if (contentType.mimeType == 'text/plain') {
-        return await convert.utf8.decodeStream(nativeRequest);
+      if (mimeType == 'text/plain') {
+        return convert.utf8.decode(bodyBytes);
       }
     } catch (e, stacktrace) {
+      print(e);
+      print(stacktrace);
+
       throw BadRequestException(
         message: 'The request cannot be processed',
         error: e,
@@ -135,14 +247,20 @@ class Request {
     return fields;
   }
 
-  Future<Map<String, Object>?> _parseMultiPartForm(HttpRequest request) async {
+  Future<Map<String, Object>?> _parseMultiPartForm(
+    Uint8List bytes,
+    ContentType contentType,
+  ) async {
     final body = <String, Object>{};
-    final boundary = request.headers.contentType!.parameters['boundary'];
+
+    final boundary = contentType.parameters['boundary'];
 
     if (boundary == null) return null;
 
+    final byteStream = Stream.fromIterable(bytes.map((byte) => [byte]));
+
     final transformer = MimeMultipartTransformer(boundary);
-    final parts = await transformer.bind(request).toList();
+    final parts = await transformer.bind(byteStream).toList();
 
     for (final part in parts) {
       final rawCD = part.headers['content-disposition'];
@@ -160,6 +278,7 @@ class Request {
       if (filename != null) {
         final contentType = part.headers['content-type'];
         final bytes = (await part.toList()).expand((b) => b).toList();
+
         body[fieldName] = MultipartFileUpload(
           name: filename,
           mime: contentType,

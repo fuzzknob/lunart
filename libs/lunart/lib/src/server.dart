@@ -120,9 +120,9 @@ class Server {
   ) async {
     httpResponse.statusCode = response.statusCode;
 
-    response.headers.forEach(
-      (key, value) => httpResponse.headers.set(key, value),
-    );
+    for (final entry in response.getHeaders().entries) {
+      httpResponse.headers.set(entry.key, entry.value);
+    }
 
     for (final cookie in response.cookies) {
       if (cookie.signed && !cookie.hasSigned) {

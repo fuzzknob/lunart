@@ -10,20 +10,20 @@ class Response {
   int _statusCode = HttpStatus.ok;
   Object? _body = '';
   Map<String, Object> _headers = {};
-  void Function(HttpResponse, Response)? _hijacker;
+
   List<LunartCookie> cookies = [];
+
   bool bufferResponse = false;
 
   // Will be flagged to be converted by the response converter registry
   bool autoResolveResponseType = false;
 
   int get statusCode => _statusCode;
-  Map<String, Object> get headers => _headers;
   Object? get body => _body;
 
-  bool get hasHijacked => _hijacker != null;
-
-  Response();
+  Map<String, Object> getHeaders() {
+    return _headers;
+  }
 
   Response status(int statusCode) {
     _statusCode = statusCode;
@@ -44,6 +44,7 @@ class Response {
 
   Response header(String name, Object value) {
     _headers[name] = value;
+
     return this;
   }
 
@@ -155,13 +156,6 @@ class Response {
     return this;
   }
 
-  /// Hijacks the response.
-  /// The hijacker is responsible to write and close the http response
-  Response hijack(void Function(HttpResponse, Response) hijacker) {
-    _hijacker = hijacker;
-    return this;
-  }
-
   Response sse(void Function(SSEHelper) cb) {
     final sseHelper = SSEHelper();
 
@@ -223,7 +217,6 @@ class Response {
     _body = other._body;
     _statusCode = other._statusCode;
     _headers = {..._headers, ...other._headers};
-    _hijacker = other._hijacker;
     cookies = [...cookies, ...other.cookies];
     autoResolveResponseType = other.autoResolveResponseType;
 

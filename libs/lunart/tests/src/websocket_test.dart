@@ -183,7 +183,7 @@ void main() {
       response = response as Response;
 
       expect(
-        response.headers,
+        response.getHeaders(),
         equals({
           'Connection': 'Upgrade',
           'Upgrade': 'websocket',
@@ -303,9 +303,11 @@ void main() {
 
       response = response as Response;
 
+      final responseHeaders = response.getHeaders();
+
       expect(response.statusCode, 426);
       expect(
-        response.headers['Sec-WebSocket-Version'],
+        responseHeaders['Sec-WebSocket-Version'],
         '13',
       );
     });

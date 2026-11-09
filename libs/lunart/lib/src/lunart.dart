@@ -6,12 +6,12 @@ import 'router.dart';
 import 'types.dart';
 
 class Lunart {
-  late final Router router;
-  late final Server server;
+  late final Router _router;
+  late final Server _server;
 
   Lunart({String prefix = '', bool barebones = false}) {
-    router = Router(prefix: prefix);
-    server = Server();
+    _router = Router(prefix: prefix);
+    _server = Server();
 
     if (!barebones) {
       plug(BaseLunartPlugin());
@@ -26,19 +26,19 @@ class Lunart {
 
   // Add global middleware
   Lunart use(Middleware middleware) {
-    server.use(middleware);
+    _server.use(middleware);
 
     return this;
   }
 
   Lunart mount(Router router) {
-    this.router.mount(router);
+    _router.mount(router);
 
     return this;
   }
 
   Lunart registerResponseResolver<T>(ResponseResolver<T> resolver) {
-    server.registerResponseResolver<T>(resolver);
+    _server.registerResponseResolver<T>(resolver);
 
     return this;
   }
@@ -49,7 +49,7 @@ class Lunart {
     Handler handler, {
     List<Middleware> middlewares = const [],
   }) {
-    router.add(path, method, handler, middlewares: middlewares);
+    _router.add(path, method, handler, middlewares: middlewares);
 
     return this;
   }
@@ -125,7 +125,7 @@ class Lunart {
     String prefix = '',
     List<Middleware> middlewares = const [],
   }) {
-    router.group(builder, prefix: prefix, middlewares: middlewares);
+    _router.group(builder, prefix: prefix, middlewares: middlewares);
 
     return this;
   }
@@ -136,7 +136,7 @@ class Lunart {
     List<Middleware> middlewares = const [],
     Duration? pingInterval,
   }) {
-    router.ws(
+    _router.ws(
       path,
       handler,
       middlewares: middlewares,
@@ -150,8 +150,16 @@ class Lunart {
     int port = 8000,
     String host = '0.0.0.0',
     bool silent = false,
+    ServerIsolatesMode isolatesMode = .singleIsolate,
+    int isolates = 1,
   }) async {
-    await server.serve(router, port: port, host: host);
+    await _server.serve(
+      _router,
+      port: port,
+      host: host,
+      isolatesMode: isolatesMode,
+      isolates: isolates,
+    );
 
     if (!silent) {
       print('Started server at $host:$port');

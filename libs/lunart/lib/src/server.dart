@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'interfaces/response_thief.dart';
@@ -33,12 +34,34 @@ class Server {
     RequestHandler router, {
     int port = 8000,
     String host = '0.0.0.0',
+    ServerIsolatesMode isolatesMode = .singleIsolate,
+    int isolates = 1,
   }) async {
     this.router = router;
 
-    final httpServer = await HttpServer.bind(host, port);
+    if (isolatesMode == .coreBounded) {
+      isolates = Platform.numberOfProcessors - 1;
+    }
 
-    httpServer.listen(handleRequest);
+    final isMultiIsolate = isolates > 1 && isolatesMode != .singleIsolate;
+
+    if (isMultiIsolate) {
+      for (int i = 1; i < isolates; i++) {
+        await Isolate.spawn(
+          _spawnServer,
+          _ServerOptions(
+            id: i,
+            host: host,
+            port: port,
+            shared: true,
+          ),
+        );
+      }
+    }
+
+    _spawnServer(
+      .new(id: 0, host: host, port: port, shared: isMultiIsolate),
+    );
 
     return this;
   }
@@ -165,6 +188,16 @@ class Server {
     await httpResponse.close();
   }
 
+  void _spawnServer(_ServerOptions options) async {
+    final httpServer = await HttpServer.bind(
+      options.host,
+      options.port,
+      shared: options.shared,
+    );
+
+    httpServer.listen(handleRequest);
+  }
+
   void _handleServerError(
     Object? e,
     StackTrace trace,
@@ -182,4 +215,17 @@ class Server {
       await httpResponse.close();
     }
   }
+}
+
+class _ServerOptions({
+  required final int id,
+  required final String host,
+  required final int port,
+  var bool shared = false,
+});
+
+enum ServerIsolatesMode {
+  singleIsolate,
+  multiIsolate,
+  coreBounded,
 }

@@ -33,16 +33,10 @@
         </style>
     </head>
     <body>
-        <textarea
-            autofocus
-            name="paste"
-            id="text"
-            placeholder="Paste Bin"
-            spellcheck="false"
-        ></textarea>
+        <textarea autofocus name="paste" id="text" placeholder="Paste Bin" spellcheck="false"></textarea>
 
         <script>
-            const socket = new WebSocket("ws://10.10.1.11:8000/ws");
+            const socket = new WebSocket("ws://localhost:8000/ws");
             const text = document.getElementById("text");
 
             const id = crypto.getRandomValues(new Uint32Array(1))[0];

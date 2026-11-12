@@ -1,6 +1,8 @@
 import 'package:lunart/lunart.dart';
 
 void main() {
+  // By default the server is using [errorHandler()] middleware
+  // if you want to remove it just set barebones flag to `true`
   final app = Lunart();
 
   // This exception will be handled by global error_handler middleware

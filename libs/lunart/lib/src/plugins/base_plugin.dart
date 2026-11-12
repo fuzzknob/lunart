@@ -5,6 +5,6 @@ import '../interfaces/plugin.dart';
 class BaseLunartPlugin implements Plugin {
   @override
   void plug(Lunart app) {
-    app.use(errorHandler);
+    app.use(errorHandler());
   }
 }

@@ -47,5 +47,7 @@ export 'src/middlewares/timeout.dart';
 export 'src/plugins/base_plugin.dart';
 export 'src/plugins/static_plugin.dart';
 
+export 'src/dev/watcher.dart';
+
 export 'dart:io' show SameSite, HttpStatus;
 export 'dart:async' show FutureOr;
